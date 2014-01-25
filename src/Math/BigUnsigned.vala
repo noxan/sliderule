@@ -196,23 +196,53 @@ class BigUnsigned {
 	// WILL BE REMOVED OR REPLACED LATER
 
 	private string to_bin(uint64 l) {
-		string result = "";
+		var result = new StringBuilder();
 		for(int i = 63; i >= 0; i--) {
 			uint64 b = (l>>i)&0x1;
-			result += b.to_string();
+			result.append(b.to_string());
 		}
-		return result;
+		return result.str;
 	}
 
 	public string to_binary_string() {
-		string result = "";
+		var result = new StringBuilder();
 		for(int i = length-1; i >= 0; i--) {
-			result += to_bin(blocks[i]);
+			result.append(to_bin(blocks[i]));
 			if(i != 0) {
-				result += " ";
+				result.append_unichar(' ');
 			}
 		}
-		return result;
+		return result.str;
+	}
+
+	private string to_hex(uint64 l) {
+		if(isZero()) {
+			return "0";
+		}
+		var result = new StringBuilder();
+		for(int i = 60; i >= 0; i -= 4) {
+			uint64 b = (l>>i)&0xF;
+			if(b < 10) {
+				result.append(b.to_string());
+			} else {
+				result.append_unichar((char)('A' + (b-10)));
+			}
+		}
+		return result.str;
+	}
+
+	public string to_hex_string() {
+		if(isZero()) {
+			return "0";
+		}
+		var result = new StringBuilder();
+		for(int i = length-1; i >= 0; i--) {
+			result.append(to_hex(blocks[i]));
+			if(i != 0) {
+				result.append_unichar(' ');
+			}
+		}
+		return result.str;
 	}
 }
 
