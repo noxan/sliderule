@@ -40,7 +40,7 @@ class BigUnsigned {
 	 */
 	public BigUnsigned.from_blocks(uint32[] blocks)  {
 		this.blocks = blocks;
-		removeLeadingZeros();
+		remove_leading_zeros();
 	}
 
 	/**
@@ -65,7 +65,7 @@ class BigUnsigned {
 	/**
 	 * Returns whether this number is zero.
 	 */
-	public bool isZero() {
+	public bool is_zero() {
 		return length == 0;
 	}
 
@@ -73,13 +73,17 @@ class BigUnsigned {
 	 * Calculates and sets the actual internal length. This is equal to removing
 	 * leading zeros.
 	 */
-	private void removeLeadingZeros() {
+	private void remove_leading_zeros() {
 		length = blocks.length;
 		while(blocks[length-1] == 0 && length > 0) {
 			length--;
 		}
 	}
 
+	/**
+	 * Assigns the given value to this BigUnsigned.
+	 * @param val: the value to assign
+	 */
 	public BigUnsigned assign(BigUnsigned val) {
 		blocks = val.blocks;
 		length = val.length;
@@ -90,9 +94,9 @@ class BigUnsigned {
 	 * Sets this BigUnsigned to the value (this + addend).
 	 * @param addend: the value to add
 	 */
-	public BigUnsigned addAssign(BigUnsigned addend) {
+	public BigUnsigned add_assign(BigUnsigned addend) {
 		// if the given value is zero there is nothing to add so just return
-		if(addend.isZero()) {
+		if(addend.is_zero()) {
 			return this;
 		}
 
@@ -142,7 +146,7 @@ class BigUnsigned {
 	 */
 	public BigUnsigned add(BigUnsigned addend) {
 		var result = new BigUnsigned.copy(this);
-		return result.addAssign(addend);
+		return result.add_assign(addend);
 	}
 
 	/**
@@ -150,9 +154,9 @@ class BigUnsigned {
 	 * a MathError.NEGATIVE_RESULT will be thrown.
 	 * @param subtrahend: the value to subtract
 	 */
-	public BigUnsigned subtractAssign(BigUnsigned subtrahend) throws MathError {
+	public BigUnsigned subtract_assign(BigUnsigned subtrahend) throws MathError {
 		// if the subtrahend is zero
-		if(subtrahend.isZero()) {
+		if(subtrahend.is_zero()) {
 			return this;
 		}
 
@@ -193,7 +197,7 @@ class BigUnsigned {
 					"negative result within unsigned subtraction");
 		}
 
-		removeLeadingZeros();
+		remove_leading_zeros();
 
 		return this;
 	}
@@ -205,16 +209,16 @@ class BigUnsigned {
 	 */
 	public BigUnsigned subtract(BigUnsigned subtrahend) throws MathError {
 		var result = new BigUnsigned.copy(this);
-		return result.subtractAssign(subtrahend);
+		return result.subtract_assign(subtrahend);
 	}
 
-	public BigUnsigned multiplyAssign(BigUnsigned factor) {
+	public BigUnsigned multiply_assign(BigUnsigned factor) {
 		return assign(multiply(factor));
 	}
 
 	public BigUnsigned multiply(BigUnsigned factor) {
 		// if one of the factors is zero, return zero as result
-		if(isZero() || factor.isZero()) {
+		if(is_zero() || factor.is_zero()) {
 			return new BigUnsigned();
 		}
 
@@ -246,7 +250,7 @@ class BigUnsigned {
 	}
 
 	private string to_hex(uint32 l) {
-		if(isZero()) {
+		if(is_zero()) {
 			return "0";
 		}
 		var result = new StringBuilder();
@@ -262,7 +266,7 @@ class BigUnsigned {
 	}
 
 	public string to_hex_string() {
-		if(isZero()) {
+		if(is_zero()) {
 			return "0";
 		}
 		var result = new StringBuilder();
