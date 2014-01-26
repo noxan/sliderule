@@ -310,6 +310,150 @@ class BigUnsigned {
 	}
 
 	/**
+	 * Sets the value of this to (this / divisor). If the divisor is zero, a
+	 * MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigUnsigned divide_assign(BigUnsigned divisor) throws MathError {
+		var q = new BigUnsigned();
+		divide_with_remainder(divisor, q);
+		assign(q);
+		return this;
+	}
+
+	/**
+	 * Returns a BigUnsigned with the value (this / divisor). If the divisor is
+	 * zero, a MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigUnsigned divide(BigUnsigned divisor) throws MathError {
+		var q = new BigUnsigned();
+		var r = new BigUnsigned.copy(this);
+		r.divide_with_remainder(divisor, q);
+		return q;
+	}
+
+	/**
+	 * Sets the value of this to (this mod divisor). If the divisor is zero, a
+	 * MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigUnsigned mod_assign(BigUnsigned divisor) throws MathError {
+		var q = new BigUnsigned();
+		divide_with_remainder(divisor, q);
+		return this;
+	}
+
+	/**
+	 * Returns a BigUnsigned with the value (this mod divisor). If the divisor
+	 * is zero, a MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigUnsigned mod(BigUnsigned divisor) throws MathError {
+		var q = new BigUnsigned();
+		var r = new BigUnsigned.copy(this);
+		r.divide_with_remainder(divisor, q);
+		return r;
+	}
+
+	/**
+	 * Divides this through divisor. The resulting quotient will be stored in
+	 * quotient. The remainder will be stored in this. If the divisor is zero, a
+	 * MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor
+	 * @param quotient
+	 */
+	public BigUnsigned divide_with_remainder(BigUnsigned divisor,
+			BigUnsigned quotient) throws MathError {
+		// division by zero is not allowed
+		if(divisor.is_zero()) {
+			throw new MathError.DIVISION_BY_ZERO("division by zero");
+		}
+		// if the dividend is zero, quotient and remainder will be zero
+		if(is_zero()) {
+			quotient.reset_to_zero();
+			reset_to_zero();
+			return this;
+		}
+
+		// if the dividend is less than the divisor, the quotient will be zero
+		// and the remainder will have the dividend's value
+		if(length < divisor.length) {
+			quotient.reset_to_zero();
+			return this;
+		}
+
+		length++;
+		if(blocks.length < length) {
+			blocks.resize(length);
+		}
+
+		var buffer = new uint32[length];
+
+		// TODO improve quotient initialization
+		quotient.length = length - divisor.length;
+		quotient.blocks = new uint32[length];
+
+		int i, j, k;
+		uint l;
+		uint32 tmp;
+		bool borrowIn = false;
+		bool borrowOut = false;
+
+		// iterate over all possible blocks of the quotient
+		i = quotient.length;
+		while(i > 0) {
+			i--;
+
+			quotient.blocks[i] = 0;
+			// iterate over all possible shift widths
+			l = BITS_PER_BLOCK;
+			while(l > 0) {
+				l--;
+
+				// subtract the divisor shifted left by i blocks and l bits
+				// from this.
+				// store the result in the temporary buffer
+				borrowIn = false;
+				for(j = 0, k = i; j < divisor.length; j++, k++) {
+					tmp = blocks[k] - get_shifted_block(divisor, j, l);
+					borrowOut = (tmp > blocks[l]);
+					if(borrowIn) {
+						borrowOut |= (tmp == 0);
+						tmp--;
+					}
+
+					buffer[k] = tmp;
+					borrowIn = borrowOut;
+				}
+
+				// subtract one from every remaining block as long as there is a
+				// borrow bit
+				for(; k < length-1 && borrowIn; k++) {
+					borrowIn = (blocks[k] == 0);
+					buffer[k] = blocks[k] - 1;
+				}
+
+				// the subtraction's result is not negative, so set the
+				// corresponding bit in the quotient and subtract the buffer
+				// from this
+				if(!borrowIn) {
+					quotient.blocks[i] |= (1 << l);
+					while(k > i) {
+						k--;
+						blocks[k] = buffer[k];
+					}
+				}
+			}
+		}
+
+		quotient.remove_leading_zeros();
+		remove_leading_zeros();
+
+		return this;
+	}
+
+	/**
 	 * Compares this an val for equality.
 	 * @param val the value to which this is to be compared
 	 * @return true if this is equal to val, otherwise false
