@@ -13,6 +13,8 @@ class BigUnsigned {
 	 */
 	private uint32[] blocks;
 
+	private const uint BITS_PER_BLOCK = 32;
+
 	/**
 	 * Creates a new BigUnsigned with the value zero.
 	 */
@@ -213,17 +215,86 @@ class BigUnsigned {
 		return result.subtract_assign(subtrahend);
 	}
 
+	/**
+	 * Returns the index-th block of (n << shift).
+	 * @param n the BigUnsigned to shift
+	 * @param index the block index, in [0:n.length]
+	 * @param shift the shift width, in [0:BITS_PER_BLOCK-1]
+	 */
+	private uint32 get_shifted_block(BigUnsigned n, int index, int shift) {
+		// calculate the lower part of the resulting block
+		// if index or shift is zero, the lower part will always be zero
+		uint32 part0 = (index == 0 || shift == 0) ?
+				0 : (n.blocks[index - 1] >> (BITS_PER_BLOCK - shift));
+		// calcuate the upper part of the resulting block
+		// if index is n.length, the upper part will always be zero
+		uint32 part1 = (index == n.length) ? 0 : (n.blocks[index] << shift);
+		return part0 | part1;
+	}
+
+	/**
+	 * Sets the value of this to (this * factor).
+	 * @param factor the value to multiply with
+	 */
 	public BigUnsigned multiply_assign(BigUnsigned factor) {
 		return assign(multiply(factor));
 	}
 
+	/**
+	 * Returns a BigUnsigned with the value (this * subtrahend).
+	 * @param factor the factor to multiply with
+	 */
 	public BigUnsigned multiply(BigUnsigned factor) {
 		// if one of the factors is zero, return zero as result
 		if(is_zero() || factor.is_zero()) {
 			return new BigUnsigned();
 		}
 
+		// determine the smaller number of this and factor (in terms of blocks)
+		bool this_smaller = length < factor.length;
+		var a = this_smaller ? this : factor;
+		var b = this_smaller ? factor : this;
+
 		var result = new BigUnsigned.with_size(length + factor.length);
+
+		// iterate over all blocks of a
+		for(int i = 0; i < a.length; i++) {
+			// iterate over all bits in the current block of a
+			for(int j = 0; j < BITS_PER_BLOCK; j++) {
+				// if the current bit is not set, just continue, there is
+				// nothing to add in this step
+				if(((a.blocks[i] >> j) & 0x1) == 0) {
+					continue;
+				}
+
+				int l, k;
+				uint32 tmp;
+				bool carryIn = false;
+				bool carryOut = false;
+				// iterate over all blocks of b
+				for(k = 0, l = i; k <= b.length; k++, l++) {
+					// add the shifted block of b and the current result block
+					tmp = result.blocks[l] + get_shifted_block(b, k, j);
+					carryOut = (tmp < result.blocks[l]);
+					if(carryIn) {
+						tmp++;
+						carryOut |= (tmp == 0);
+					}
+					result.blocks[l] = tmp;
+					carryIn = carryOut;
+				}
+
+				// increase the current block by one as long as a carry bit is
+				// set
+				for(; carryIn; l++) {
+					result.blocks[k]++;
+					carryIn = (result.blocks[k] == 0);
+				}
+			}
+		}
+
+		result.remove_leading_zeros();
+
 		return result;
 	}
 
