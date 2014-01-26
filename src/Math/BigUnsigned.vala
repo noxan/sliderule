@@ -298,6 +298,40 @@ class BigUnsigned {
 		return result;
 	}
 
+	/**
+	 * Compares this an val for equality.
+	 * @param val the value to which this is to be compared
+	 * @return true if this is equal to val, otherwise false
+	 */
+	public bool equals(BigUnsigned val) {
+		return compare_to(val) == 0;
+	}
+
+	/**
+	 * Compares this to val.
+	 * @param val the value to which this is to be compared
+	 * @return -1, 0, 1 if this is less than, equal to or greater than val
+	 */
+	public int compare_to(BigUnsigned val) {
+		// compare lengths of this and val
+		if(length < val.length) {
+			return -1;
+		} else if(length > val.length) {
+			return 1;
+		}
+
+		// both lengths are equal, so iterate over all blocks
+		for(int i = length-1; i >= 0; i--) {
+			if(blocks[i] < val.blocks[i]) {
+				return -1;
+			} else if(blocks[i] > val.blocks[i]) {
+				return 1;
+			}
+		}
+		// all blocks are equal, so this == val
+		return 0;
+	}
+
 	// JUST TESTING CODE
 	// WILL BE REMOVED OR REPLACED LATER
 
