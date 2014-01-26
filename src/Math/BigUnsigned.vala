@@ -72,6 +72,17 @@ class BigUnsigned {
 	}
 
 	/**
+	 * Resets this to zero. This means that the length will be set to zero and
+	 * all blocks will be zeroed.
+	 */
+	private void reset_to_zero() {
+		length = 0;
+		for(int i = 0; i < blocks.length; i++) {
+			blocks[i] = 0;
+		}
+	}
+
+	/**
 	 * Calculates and sets the actual internal length. This is equal to removing
 	 * leading zeros.
 	 */
