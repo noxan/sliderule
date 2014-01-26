@@ -31,7 +31,7 @@ class BigUnsigned {
 	 */
 	private uint32[] blocks;
 
-	private const uint BITS_PER_BLOCK = 32;
+	private static const uint BITS_PER_BLOCK = 32;
 
 	/**
 	 * Creates a new BigUnsigned with the value zero.
@@ -378,8 +378,8 @@ class BigUnsigned {
 	 * Divides this through divisor. The resulting quotient will be stored in
 	 * quotient. The remainder will be stored in this. If the divisor is zero, a
 	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor
-	 * @param quotient
+	 * @param divisor the value this is to be divided through
+	 * @param quotient the BigUnsigned to store the quotient result in
 	 */
 	public BigUnsigned divide_with_remainder(BigUnsigned divisor,
 			BigUnsigned quotient) throws MathError {
@@ -472,7 +472,7 @@ class BigUnsigned {
 	}
 
 	/**
-	 * Compares this an val for equality.
+	 * Compares this and val for equality.
 	 * @param val the value to which this is to be compared
 	 * @return true if this is equal to val, otherwise false
 	 */
