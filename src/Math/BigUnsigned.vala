@@ -388,29 +388,26 @@ class BigUnsigned {
 			throw new MathError.DIVISION_BY_ZERO("division by zero");
 		}
 		// if the dividend is zero, quotient and remainder will be zero
-		if(is_zero()) {
-			quotient.reset_to_zero();
-			reset_to_zero();
-			return this;
-		}
-
 		// if the dividend is less than the divisor, the quotient will be zero
 		// and the remainder will have the dividend's value
-		if(length < divisor.length) {
+		if(is_zero() || length < divisor.length) {
 			quotient.reset_to_zero();
 			return this;
 		}
 
+		// resize internal blocks by one element if necessary
+		int old_length = length;
 		length++;
 		if(blocks.length < length) {
 			blocks.resize(length);
 		}
+		blocks[old_length] = 0;
 
 		var buffer = new uint32[length];
 
 		// TODO improve quotient initialization
-		quotient.length = length - divisor.length;
-		quotient.blocks = new uint32[length];
+		quotient.length = old_length - divisor.length + 1;
+		quotient.blocks = new uint32[quotient.length];
 
 		int i, j, k;
 		uint l;
@@ -433,21 +430,20 @@ class BigUnsigned {
 				// from this.
 				// store the result in the temporary buffer
 				borrowIn = false;
-				for(j = 0, k = i; j < divisor.length; j++, k++) {
+				for(j = 0, k = i; j <= divisor.length; j++, k++) {
 					tmp = blocks[k] - get_shifted_block(divisor, j, l);
-					borrowOut = (tmp > blocks[l]);
+					borrowOut = (tmp > blocks[k]);
 					if(borrowIn) {
 						borrowOut |= (tmp == 0);
 						tmp--;
 					}
-
 					buffer[k] = tmp;
 					borrowIn = borrowOut;
 				}
 
 				// subtract one from every remaining block as long as there is a
 				// borrow bit
-				for(; k < length-1 && borrowIn; k++) {
+				for(; k < old_length && borrowIn; k++) {
 					borrowIn = (blocks[k] == 0);
 					buffer[k] = blocks[k] - 1;
 				}
