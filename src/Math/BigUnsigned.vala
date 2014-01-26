@@ -11,31 +11,36 @@ class BigUnsigned {
 	/**
 	 * The blocks that are internally used to represent the BigUnsigned.
 	 */
-	private uint64[] blocks;
+	private uint32[] blocks;
 
 	/**
 	 * Creates a new BigUnsigned with the value zero.
 	 */
 	public BigUnsigned() {
-		this.from_uint64(0);
+		this.from_uint32(0);
 	}
 
 	/**
 	 * Creates a new BigUnsigned with the given value.
 	 * @param val: the given value
 	 */
-	public BigUnsigned.from_uint64(uint64 val) {
-		blocks = {val};
-		length = 1;
+	public BigUnsigned.from_uint32(uint32 val) {
+		if(val == 0) {
+			blocks = {};
+			length = 0;
+		} else {
+			blocks = {val};
+			length = 1;
+		}
 	}
 
 	/**
 	 * Creates a new BigUnsigned with the given blocks.
 	 * @param blocks: the given value blocks, index 0 is the LSB
 	 */
-	public BigUnsigned.from_blocks(uint64[] blocks)  {
+	public BigUnsigned.from_blocks(uint32[] blocks)  {
 		this.blocks = blocks;
-		calculateLength();
+		removeLeadingZeros();
 	}
 
 	/**
@@ -54,34 +59,41 @@ class BigUnsigned {
 	 */
 	private BigUnsigned.with_size(int length) {
 		this.length = length;
-		this.blocks = new uint64[length];
+		this.blocks = new uint32[length];
 	}
 
 	/**
 	 * Returns whether this number is zero.
 	 */
 	public bool isZero() {
-		return length == 1 && blocks[0] == 0;
+		return length == 0;
 	}
 
 	/**
-	 * Calculates and sets the actual internal length.
+	 * Calculates and sets the actual internal length. This is equal to removing
+	 * leading zeros.
 	 */
-	private void calculateLength() {
+	private void removeLeadingZeros() {
 		length = blocks.length;
-		while(blocks[length-1] == 0 && length > 1) {
+		while(blocks[length-1] == 0 && length > 0) {
 			length--;
 		}
+	}
+
+	public BigUnsigned assign(BigUnsigned val) {
+		blocks = val.blocks;
+		length = val.length;
+		return this;
 	}
 
 	/**
 	 * Sets this BigUnsigned to the value (this + addend).
 	 * @param addend: the value to add
 	 */
-	public void addAssign(BigUnsigned addend) {
+	public BigUnsigned addAssign(BigUnsigned addend) {
 		// if the given value is zero there is nothing to add so just return
 		if(addend.isZero()) {
-			return;
+			return this;
 		}
 
 		// resize so that there is enough space for the result
@@ -89,7 +101,7 @@ class BigUnsigned {
 		blocks.resize(length);
 
 		int i;
-		uint64 tmp;
+		uint32 tmp;
 		var carryIn = false;
 		var carryOut = false;
 
@@ -120,6 +132,8 @@ class BigUnsigned {
 		} else {
 			length--;
 		}
+
+		return this;
 	}
 
 	/**
@@ -128,8 +142,7 @@ class BigUnsigned {
 	 */
 	public BigUnsigned add(BigUnsigned addend) {
 		var result = new BigUnsigned.copy(this);
-		result.addAssign(addend);
-		return result;
+		return result.addAssign(addend);
 	}
 
 	/**
@@ -137,10 +150,10 @@ class BigUnsigned {
 	 * a MathError.NEGATIVE_RESULT will be thrown.
 	 * @param subtrahend: the value to subtract
 	 */
-	public void subtractAssign(BigUnsigned subtrahend) throws MathError {
+	public BigUnsigned subtractAssign(BigUnsigned subtrahend) throws MathError {
 		// if the subtrahend is zero
 		if(subtrahend.isZero()) {
-			return;
+			return this;
 		}
 
 		// check whether the result will not be negative
@@ -150,7 +163,7 @@ class BigUnsigned {
 		}
 
 		int i;
-		uint64 tmp;
+		uint32 tmp;
 		bool borrowIn = false;
 		bool borrowOut = false;
 
@@ -179,6 +192,10 @@ class BigUnsigned {
 			throw new MathError.NEGATIVE_RESULT(
 					"negative result within unsigned subtraction");
 		}
+
+		removeLeadingZeros();
+
+		return this;
 	}
 
 	/**
@@ -188,17 +205,30 @@ class BigUnsigned {
 	 */
 	public BigUnsigned subtract(BigUnsigned subtrahend) throws MathError {
 		var result = new BigUnsigned.copy(this);
-		result.subtractAssign(subtrahend);
+		return result.subtractAssign(subtrahend);
+	}
+
+	public BigUnsigned multiplyAssign(BigUnsigned factor) {
+		return assign(multiply(factor));
+	}
+
+	public BigUnsigned multiply(BigUnsigned factor) {
+		// if one of the factors is zero, return zero as result
+		if(isZero() || factor.isZero()) {
+			return new BigUnsigned();
+		}
+
+		var result = new BigUnsigned.with_size(length + factor.length);
 		return result;
 	}
 
 	// JUST TESTING CODE
 	// WILL BE REMOVED OR REPLACED LATER
 
-	private string to_bin(uint64 l) {
+	private string to_bin(uint32 l) {
 		var result = new StringBuilder();
-		for(int i = 63; i >= 0; i--) {
-			uint64 b = (l>>i)&0x1;
+		for(int i = 31; i >= 0; i--) {
+			uint32 b = (l>>i)&0x1;
 			result.append(b.to_string());
 		}
 		return result.str;
@@ -215,13 +245,13 @@ class BigUnsigned {
 		return result.str;
 	}
 
-	private string to_hex(uint64 l) {
+	private string to_hex(uint32 l) {
 		if(isZero()) {
 			return "0";
 		}
 		var result = new StringBuilder();
-		for(int i = 60; i >= 0; i -= 4) {
-			uint64 b = (l>>i)&0xF;
+		for(int i = 28; i >= 0; i -= 4) {
+			uint32 b = (l>>i)&0xF;
 			if(b < 10) {
 				result.append(b.to_string());
 			} else {
