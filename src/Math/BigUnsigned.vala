@@ -547,59 +547,6 @@ class BigUnsigned {
 	public string to_string() {
 		return to_radix_string(10);
 	}
-
-	// JUST TESTING CODE
-	// WILL BE REMOVED OR REPLACED LATER
-
-	private string to_bin(uint32 l) {
-		var result = new StringBuilder();
-		for(int i = 31; i >= 0; i--) {
-			uint32 b = (l>>i)&0x1;
-			result.append(b.to_string());
-		}
-		return result.str;
-	}
-
-	public string to_binary_string() {
-		var result = new StringBuilder();
-		for(int i = length-1; i >= 0; i--) {
-			result.append(to_bin(blocks[i]));
-			if(i != 0) {
-				result.append_unichar(' ');
-			}
-		}
-		return result.str;
-	}
-
-	private string to_hex(uint32 l) {
-		if(is_zero()) {
-			return "0";
-		}
-		var result = new StringBuilder();
-		for(int i = 28; i >= 0; i -= 4) {
-			uint32 b = (l>>i)&0xF;
-			if(b < 10) {
-				result.append(b.to_string());
-			} else {
-				result.append_unichar((char)('A' + (b-10)));
-			}
-		}
-		return result.str;
-	}
-
-	public string to_hex_string() {
-		if(is_zero()) {
-			return "0";
-		}
-		var result = new StringBuilder();
-		for(int i = length-1; i >= 0; i--) {
-			result.append(to_hex(blocks[i]));
-			if(i != 0) {
-				result.append_unichar(' ');
-			}
-		}
-		return result.str;
-	}
 }
 
 }
