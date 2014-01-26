@@ -501,6 +501,53 @@ class BigUnsigned {
 		return 0;
 	}
 
+	/**
+	 * Returns the string representation of this BigUnsigned in the given radix.
+	 * @param radix the radix, in [2:36]
+	 */
+	public string to_radix_string(uint radix) {
+		// TODO IMPROVE PERFORMANCE, EXCHANGE ALGORITHM
+		if(radix < 2 || radix > 36) {
+			// TODO add documentation or throw error
+			radix = 10;
+		}
+
+		if(is_zero()) {
+			return "0";
+		}
+
+		var result = new StringBuilder();
+
+		var b = new BigUnsigned.from_uint32(radix);
+		var q = new BigUnsigned();
+		var tmp = new BigUnsigned.copy(this);
+		while(!tmp.is_zero()) {
+			tmp.divide_with_remainder(b, q);
+
+			if(tmp.is_zero()) {
+				result.prepend_unichar('0');
+			} else {
+				var val = tmp.blocks[0];
+				if(val < 10) {
+					result.prepend_unichar((char)('0' + val));
+				} else {
+					result.prepend_unichar((char)('A' + val));
+				}
+			}
+
+			tmp.assign(q);
+		}
+
+		return result.str;
+	}
+
+	/**
+	 * Returns the decimal string representation of this BigUnsigned.
+	 */
+	public string to_string() {
+		return to_radix_string(10);
+	}
+
 	// JUST TESTING CODE
 	// WILL BE REMOVED OR REPLACED LATER
 
