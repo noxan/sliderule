@@ -64,6 +64,26 @@ class BigUnsigned {
 	}
 
 	/**
+	 * Creates a new BigUnsigned, which value will be the value of the given
+	 * string representation in the specified radix.
+	 * @param val the value's string representation
+	 * @param radix the radix, in [2:36]
+	 */
+	public BigUnsigned.from_radix_string(string val, uint radix) {
+		this();
+		assign_from_radix_string(val, radix);
+	}
+
+	/**
+	 * Creates a new BigUnsigned, which value will be the value of the given
+	 * decimal string representation.
+	 * @param val the value's decimal string representation
+	 */
+	public BigUnsigned.from_string(string val) {
+		this.from_radix_string(val, 10);
+	}
+
+	/**
 	 * Creates a copy of the given BigUnsigned.
 	 * @param val the BigUnsigned to copy
 	 */
@@ -120,6 +140,60 @@ class BigUnsigned {
 		blocks = val.blocks;
 		length = val.length;
 		return this;
+	}
+
+	/**
+	 * This method converts the given character to its numeric (not ascii!)
+	 * value.
+	 * @param c the character to convert, in [0-9a-zA-Z]
+	 */
+	private uint32 char_to_int(char c) {
+		if(c >= '0' && c <= '9') {
+			return c - '0';
+		} else if(c >= 'a' && c <= 'z') {
+			return c - 'a' + 10;
+		} else if(c >= 'A' && c <= 'Z') {
+			return c - 'A' + 10;
+		} else {
+			// TODO throw error
+			return 0;
+		}
+	}
+
+	/**
+	 * Assigns the value of the given string representation in the specified
+	 * radix to this.
+	 * @param val the value's string representation
+	 * @param radix the radix, in [2:36]
+	 */
+	public BigUnsigned assign_from_radix_string(string val, uint radix) {
+		if(radix < 2 || radix > 36) {
+			// TODO throw error
+			radix = 10;
+		}
+
+		reset_to_zero();
+		BigUnsigned b = new BigUnsigned.from_uint32(radix);
+
+		for(int i = 0; i < val.length; i++) {
+			if(i > 0) {
+				multiply_assign(b);
+			}
+
+			var x = char_to_int(val.get(i));
+			var addend = new BigUnsigned.from_uint32(x);
+			add_assign(addend);
+		}
+
+		return this;
+	}
+
+	/**
+	 * Assigns the value of the given decimal string representation to this.
+	 * @param val the value's decimal string representation
+	 */
+	public BigUnsigned assign_from_string(string val) {
+		return assign_from_radix_string(val, 10);
 	}
 
 	/**
