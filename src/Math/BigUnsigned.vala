@@ -232,7 +232,7 @@ class BigUnsigned {
 	 * @param index the block index, in [0:n.length]
 	 * @param shift the shift width, in [0:BITS_PER_BLOCK-1]
 	 */
-	private uint32 get_shifted_block(BigUnsigned n, int index, int shift) {
+	private uint32 get_shifted_block(BigUnsigned n, int index, uint shift) {
 		// calculate the lower part of the resulting block
 		// if index or shift is zero, the lower part will always be zero
 		uint32 part0 = (index == 0 || shift == 0) ?
