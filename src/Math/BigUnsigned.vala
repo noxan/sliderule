@@ -22,7 +22,7 @@ class BigUnsigned {
 
 	/**
 	 * Creates a new BigUnsigned with the given value.
-	 * @param val: the given value
+	 * @param val the given value
 	 */
 	public BigUnsigned.from_uint32(uint32 val) {
 		if(val == 0) {
@@ -36,7 +36,7 @@ class BigUnsigned {
 
 	/**
 	 * Creates a new BigUnsigned with the given blocks.
-	 * @param blocks: the given value blocks, index 0 is the LSB
+	 * @param blocks the given value blocks, index 0 is the LSB
 	 */
 	public BigUnsigned.from_blocks(uint32[] blocks)  {
 		this.blocks = blocks;
@@ -45,7 +45,7 @@ class BigUnsigned {
 
 	/**
 	 * Creates a copy of the given BigUnsigned.
-	 * @param val: the BigUnsigned to copy
+	 * @param val the BigUnsigned to copy
 	 */
 	public BigUnsigned.copy(BigUnsigned val) {
 		length = val.length;
@@ -55,7 +55,7 @@ class BigUnsigned {
 	/**
 	 * Creates a BigUnsigned with a prereserved number of blocks. This method is
 	 * only for internal usage.
-	 * @param length: the number of blocks to reserve
+	 * @param length the number of blocks to reserve
 	 */
 	private BigUnsigned.with_size(int length) {
 		this.length = length;
@@ -75,6 +75,7 @@ class BigUnsigned {
 	 */
 	private void remove_leading_zeros() {
 		length = blocks.length;
+		// as long as there are leading zeros, decrease the length by one
 		while(blocks[length-1] == 0 && length > 0) {
 			length--;
 		}
@@ -82,7 +83,7 @@ class BigUnsigned {
 
 	/**
 	 * Assigns the given value to this BigUnsigned.
-	 * @param val: the value to assign
+	 * @param val the value to assign
 	 */
 	public BigUnsigned assign(BigUnsigned val) {
 		blocks = val.blocks;
@@ -92,7 +93,7 @@ class BigUnsigned {
 
 	/**
 	 * Sets this BigUnsigned to the value (this + addend).
-	 * @param addend: the value to add
+	 * @param addend the value to add
 	 */
 	public BigUnsigned add_assign(BigUnsigned addend) {
 		// if the given value is zero there is nothing to add so just return
@@ -142,7 +143,7 @@ class BigUnsigned {
 
 	/**
 	 * Returns a BigUnsigned with the value (this + addend).
-	 * @param addend: the value to add
+	 * @param addend the value to add
 	 */
 	public BigUnsigned add(BigUnsigned addend) {
 		var result = new BigUnsigned.copy(this);
@@ -152,7 +153,7 @@ class BigUnsigned {
 	/**
 	 * Sets the value of this to (this - subtrahend). If the result is negative,
 	 * a MathError.NEGATIVE_RESULT will be thrown.
-	 * @param subtrahend: the value to subtract
+	 * @param subtrahend the value to subtract
 	 */
 	public BigUnsigned subtract_assign(BigUnsigned subtrahend) throws MathError {
 		// if the subtrahend is zero
@@ -205,7 +206,7 @@ class BigUnsigned {
 	/**
 	 * Returns a BigUnsigned with the value (this - subtrahend). If the result
 	 * is negative, a MathError.NEGATIVE_RESULT will be thrown.
-	 * @param subtrahend: the value to subtract
+	 * @param subtrahend the value to subtract
 	 */
 	public BigUnsigned subtract(BigUnsigned subtrahend) throws MathError {
 		var result = new BigUnsigned.copy(this);
