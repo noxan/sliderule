@@ -606,8 +606,11 @@ public class BigUnsigned {
 		var q = new BigUnsigned();
 		var tmp = new BigUnsigned.copy(this);
 		while(!tmp.is_zero()) {
-			tmp.divide_with_remainder(b, q);
-
+			try {
+				tmp.divide_with_remainder(b, q);
+			} catch(MathError e) {
+				// ignore, can not happen because the divisor b is not zero
+			}
 			if(tmp.is_zero()) {
 				result.prepend_unichar('0');
 			} else {
