@@ -21,7 +21,7 @@ namespace Math {
 /**
  * An arbitrary unsigned integer class.
  */
-class BigUnsigned {
+public class BigUnsigned {
 	/**
 	 * The number of blocks that are actually used to represent the number.
 	 */

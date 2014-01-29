@@ -18,7 +18,7 @@
 
 namespace Math {
 
-errordomain MathError {
+public errordomain MathError {
 	NEGATIVE_RESULT,
 	DIVISION_BY_ZERO
 }
