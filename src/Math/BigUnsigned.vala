@@ -55,6 +55,16 @@ class BigUnsigned {
 	}
 
 	/**
+	 * Creates a new BigUnsigned with the given value.
+	 * @param val the given value
+	 */
+	public BigUnsigned.from_uint64(uint64 val) {
+		uint32 low = (uint32)(val & 0xFFFFFFFF);
+		uint32 high = (uint32)(val >> 32);
+		this.from_blocks({low, high});
+	}
+
+	/**
 	 * Creates a new BigUnsigned with the given blocks.
 	 * @param blocks the given value blocks, index 0 is the LSB
 	 */
