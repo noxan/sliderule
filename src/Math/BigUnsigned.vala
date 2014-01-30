@@ -31,6 +31,9 @@ public class BigUnsigned {
 	 */
 	private uint32[] blocks;
 
+	/**
+	 * Number of bits in one block.
+	 */
 	private static const uint BITS_PER_BLOCK = 32;
 
 	/**
@@ -113,7 +116,7 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Returns whether this number is zero.
+	 * Returns whether this BigUnsigned is zero.
 	 */
 	public bool is_zero() {
 		return length == 0;
@@ -177,8 +180,8 @@ public class BigUnsigned {
 	 * @param radix the radix, in [2:36]
 	 */
 	public BigUnsigned assign_from_radix_string(string val, uint radix) {
+		// TODO proper error handling for illegal value string
 		if(radix < 2 || radix > 36) {
-			// TODO throw error
 			radix = 10;
 		}
 
@@ -191,6 +194,9 @@ public class BigUnsigned {
 			}
 
 			var x = char_to_int(val.get(i));
+			if(x >= radix) {
+				// TODO throw error
+			}
 			var addend = new BigUnsigned.from_uint32(x);
 			add_assign(addend);
 		}
