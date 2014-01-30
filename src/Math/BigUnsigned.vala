@@ -155,23 +155,6 @@ public class BigUnsigned {
 		return this;
 	}
 
-	/**
-	 * This method converts the given character to its numeric (not ascii!)
-	 * value.
-	 * @param c the character to convert, in [0-9a-zA-Z]
-	 */
-	private uint32 char_to_int(char c) {
-		if(c >= '0' && c <= '9') {
-			return c - '0';
-		} else if(c >= 'a' && c <= 'z') {
-			return c - 'a' + 10;
-		} else if(c >= 'A' && c <= 'Z') {
-			return c - 'A' + 10;
-		} else {
-			// TODO throw error
-			return 0;
-		}
-	}
 
 	/**
 	 * Assigns the value of the given string representation in the specified
