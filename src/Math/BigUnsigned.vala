@@ -123,6 +123,14 @@ public class BigUnsigned {
 	}
 
 	/**
+	 * Returns the sign of this BigUnsigned.
+	 * @return 0 or 1 if this is zero or positive
+	 */
+	public int signum() {
+		return length == 0 ? 0 : 1;
+	}
+
+	/**
 	 * Resets this to zero. This means that the length will be set to zero and
 	 * all blocks will be zeroed.
 	 */
@@ -552,7 +560,7 @@ public class BigUnsigned {
 	/**
 	 * Compares this to val.
 	 * @param val the value to which this is to be compared
-	 * @return -1, 0, 1 if this is less than, equal to or greater than val
+	 * @return -1, 0 or 1 if this is less than, equal to or greater than val
 	 */
 	public int compare_to(BigUnsigned val) {
 		// compare lengths of this and val
