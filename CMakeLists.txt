@@ -10,7 +10,10 @@ set (VERSION "0.0.1")
 
 find_package (PkgConfig)
 
-pkg_check_modules(DEPS REQUIRED gtk+-3.0)
+pkg_check_modules(DEPS REQUIRED
+  gtk+-3.0
+  granite
+)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -29,6 +32,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
 
   PACKAGES
     gtk+-3.0
+    granite
 )
 
 add_executable (${EXEC_NAME} ${VALA_C})
