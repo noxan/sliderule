@@ -31,7 +31,13 @@ class Application : Granite.Application {
         about_license_type = Gtk.License.GPL_3_0;
     }
 
+    private Gtk.Window window;
+
     protected override void activate () {
+        window = new Gtk.Window ();
+        window.set_application (this);
+
+        window.show_all ();
     }
 }
 }
