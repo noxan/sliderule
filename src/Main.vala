@@ -17,6 +17,9 @@
 */
 
 public static int main(string[] args) {
-	stdout.printf("Hello, this is Sliderule!\n");
-	return 0;
+    Gtk.init (ref args);
+
+    var application = new Sliderule.Application ();
+
+    return application.run (args);
 }
