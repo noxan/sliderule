@@ -115,6 +115,9 @@ public class BigUnsigned {
 		this.blocks = new uint32[length];
 	}
 
+	/**
+	 * Returns a copy of this BigUnsigned.
+	 */
 	public BigUnsigned create_copy() {
 		return new BigUnsigned.copy(this);
 	}
@@ -605,7 +608,7 @@ public class BigUnsigned {
 
 		var b = new BigUnsigned.from_uint32(radix);
 		var q = new BigUnsigned();
-		var tmp = new BigUnsigned.copy(this);
+		var tmp = create_copy();
 		while(!tmp.is_zero()) {
 			try {
 				tmp.divide_with_remainder(b, q);
