@@ -115,6 +115,10 @@ public class BigUnsigned {
 		this.blocks = new uint32[length];
 	}
 
+	public BigUnsigned create_copy() {
+		return new BigUnsigned.copy(this);
+	}
+
 	/**
 	 * Returns whether this BigUnsigned is zero.
 	 */
@@ -134,7 +138,7 @@ public class BigUnsigned {
 	 * Resets this to zero. This means that the length will be set to zero and
 	 * all blocks will be zeroed.
 	 */
-	private void reset_to_zero() {
+	internal void reset_to_zero() {
 		length = 0;
 		for(int i = 0; i < blocks.length; i++) {
 			blocks[i] = 0;
@@ -258,7 +262,7 @@ public class BigUnsigned {
 	 * @param addend the value to add
 	 */
 	public BigUnsigned add(BigUnsigned addend) {
-		var result = new BigUnsigned.copy(this);
+		var result = create_copy();
 		return result.add_assign(addend);
 	}
 
@@ -321,7 +325,7 @@ public class BigUnsigned {
 	 * @param subtrahend the value to subtract
 	 */
 	public BigUnsigned subtract(BigUnsigned subtrahend) throws MathError {
-		var result = new BigUnsigned.copy(this);
+		var result = create_copy();
 		return result.subtract_assign(subtrahend);
 	}
 
@@ -427,7 +431,7 @@ public class BigUnsigned {
 	 */
 	public BigUnsigned divide(BigUnsigned divisor) throws MathError {
 		var q = new BigUnsigned();
-		var r = new BigUnsigned.copy(this);
+		var r = create_copy();
 		r.divide_with_remainder(divisor, q);
 		return q;
 	}
@@ -450,7 +454,7 @@ public class BigUnsigned {
 	 */
 	public BigUnsigned mod(BigUnsigned divisor) throws MathError {
 		var q = new BigUnsigned();
-		var r = new BigUnsigned.copy(this);
+		var r = create_copy();
 		r.divide_with_remainder(divisor, q);
 		return r;
 	}
