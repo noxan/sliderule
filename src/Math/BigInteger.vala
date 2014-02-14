@@ -40,6 +40,50 @@ public class BigInteger {
 		sign = 0;
 		mag = new BigUnsigned();
 	}
+
+	/**
+	 * Creates a new BigInteger with the given value.
+	 * @param val the given value
+	 */
+	public BigInteger.from_int32(int32 val) {
+		sign = sign_of_int32(val);
+		// TODO fix absolute value hack
+		this.mag = new BigUnsigned.from_uint64(((int64)val).abs());
+	}
+
+	/**
+	 * Creates a new BigInteger with the given value.
+	 * @param val the given value
+	 */
+	public BigInteger.from_int64(int64 val) {
+		sign = sign_of_int64(val);
+		this.mag = new BigUnsigned.from_uint64(val.abs());
+	}
+
+	public BigInteger.from_big_unsigned(int sign, BigUnsigned mag)
+		requires(sign >= -1 && sign <= 1) {
+		this.sign = sign;
+		// TODO copy of big unsigned?
+		this.mag = mag;
+	}
+
+
+	/**
+	 * Creates a copy of the given BigInteger.
+	 * @param val the BigInteger to copy
+	 */
+	public BigInteger.copy(BigInteger val) {
+		sign = val.sign;
+		this.mag = val.mag.create_copy();
+	}
+
+	/**
+	 * Returns a copy of this BigInteger.
+	 */
+	public BigInteger create_copy() {
+		return new BigInteger.copy(this);
+	}
+
 }
 
 }
