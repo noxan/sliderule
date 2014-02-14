@@ -132,6 +132,32 @@ public class BigInteger {
 		return this;
 	}
 
+	/**
+	 * Assigns the value of the given string representation in the specified
+	 * radix to this.
+	 * @param val the value's string representation
+	 * @param radix the radix, in [2:36]
+	 */
+	public BigInteger assign_from_radix_string(string val, uint radix) {
+		// TODO proper error handling for illegal value string
+		var sign_char = val.get(0);
+		if(sign_char == '-') {
+			mag.assign_from_radix_string(val.substring(1), radix);
+			sign = -1;
+		} else {
+			mag.assign_from_radix_string(val, radix);
+			sign = mag.is_zero() ? 0 : 1;
+		}
+		return this;
+	}
+
+	/**
+	 * Assigns the value of the given decimal string representation to this.
+	 * @param val the value's decimal string representation
+	 */
+	public BigInteger assign_from_string(string val) {
+		return assign_from_radix_string(val, 10);
+	}
 
 	/**
 	 * Sets this BigInteger to the value (this + addend).
