@@ -249,6 +249,21 @@ public class BigInteger {
 		return result.multiply_assign(factor);
 	}
 
+	/**
+	 * Sets the value of this to -this;
+	 */
+	public BigInteger negate_assign() {
+		sign = -sign;
+		return this;
+	}
+
+	/**
+	 * Returns a BigInteger with the value -this;
+	 */
+	public BigInteger negate() {
+		var result = create_copy();
+		return result.negate_assign();
+	}
 
 	/**
 	 * Compares this and val for equality.
