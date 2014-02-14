@@ -230,6 +230,25 @@ public class BigInteger {
 		return result.subtract_assign(subtrahend);
 	}
 
+	/**
+	 * Sets the value of this to (this * factor).
+	 * @param factor the value to multiply with
+	 */
+	public BigInteger multiply_assign(BigInteger factor) {
+		sign = sign * factor.sign;
+		mag.multiply_assign(factor.mag);
+		return this;
+	}
+
+	/**
+	 * Returns a BigInteger with the value (this * subtrahend).
+	 * @param factor the factor to multiply with
+	 */
+	public BigInteger multiply(BigInteger factor) {
+		var result = create_copy();
+		return result.multiply_assign(factor);
+	}
+
 
 	/**
 	 * Compares this and val for equality.
