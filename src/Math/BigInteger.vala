@@ -122,6 +122,16 @@ public class BigInteger {
 		mag.reset_to_zero();
 	}
 
+	/**
+	 * Assigns the given value to this BigInteger.
+	 * @param val the value to assign
+	 */
+	public BigInteger assign(BigInteger val) {
+		sign = val.sign;
+		this.mag = new BigUnsigned.copy(val.mag);
+		return this;
+	}
+
 
 	/**
 	 * Sets this BigInteger to the value (this + addend).
