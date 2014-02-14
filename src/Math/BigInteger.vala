@@ -67,6 +67,25 @@ public class BigInteger {
 		this.mag = mag;
 	}
 
+	/**
+	 * Creates a new BigInteger, which value will be the value of the given
+	 * string representation in the specified radix.
+	 * @param val the value's string representation
+	 * @param radix the radix, in [2:36]
+	 */
+	public BigInteger.from_radix_string(string val, uint radix) {
+		this();
+		assign_from_radix_string(val, radix);
+	}
+
+	/**
+	 * Creates a new BigInteger, which value will be the value of the given
+	 * decimal string representation.
+	 * @param val the value's decimal string representation
+	 */
+	public BigInteger.from_string(string val) {
+		this.from_radix_string(val, 10);
+	}
 
 	/**
 	 * Creates a copy of the given BigInteger.
