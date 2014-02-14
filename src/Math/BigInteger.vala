@@ -113,6 +113,15 @@ public class BigInteger {
 		return sign;
 	}
 
+	/**
+	 * Resets this to zero. This means that the length will be set to zero and
+	 * all blocks will be zeroed.
+	 */
+	internal void reset_to_zero() {
+		sign = 0;
+		mag.reset_to_zero();
+	}
+
 
 	/**
 	 * Sets this BigInteger to the value (this + addend).
