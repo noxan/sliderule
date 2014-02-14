@@ -84,6 +84,35 @@ public class BigInteger {
 		return new BigInteger.copy(this);
 	}
 
+	/**
+	 * Returns whether this BigInteger is negative.
+	 */
+	public bool is_negative() {
+		return sign == -1;
+	}
+
+	/**
+	 * Returns whether this BigInteger is zero.
+	 */
+	public bool is_zero() {
+		return sign == 0;
+	}
+
+	/**
+	 * Returns whether this BigInteger is positive.
+	 */
+	public bool is_positive() {
+		return sign == 1;
+	}
+
+	/**
+	 * Returns the sign of this BigInteger.
+	 * @return -1, 0 or 1 if this is negative, zero or positive
+	 */
+	public int signum() {
+		return sign;
+	}
+
 }
 
 }
