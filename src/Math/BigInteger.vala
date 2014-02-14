@@ -115,6 +115,36 @@ public class BigInteger {
 
 
 	/**
+	 * Compares this and val for equality.
+	 * @param val the value to which this is to be compared
+	 * @return true if this is equal to val, otherwise false
+	 */
+	public bool equals(BigInteger val) {
+		return compare_to(val) == 0;
+	}
+
+	/**
+	 * Compares this to val.
+	 * @param val the value to which this is to be compared
+	 * @return -1, 0 or 1 if this is less than, equal to or greater than val
+	 */
+	public int compare_to(BigInteger val) {
+		// this is definitly less than val
+		if(sign < val.sign) {
+			return -1;
+		// this is definitly greater than val
+		} else if(sign > val.sign) {
+			return 1;
+		// both sign are equal, compare depending on the sign
+		} else {
+			// if sign == 0, 0 will be returned
+			// if sign == 1, this.mag.compare_to(val.mag )will be returned
+			// if sign == -1, -this.mag.compare_to(val.mag) will be returned
+			return sign * this.mag.compare_to(val.mag);
+		}
+	}
+
+	/**
 	 * Returns the string representation of this BigInteger in the given radix.
 	 * @param radix the radix, in [2:36]
 	 */
