@@ -115,6 +115,51 @@ public class BigInteger {
 
 
 	/**
+	 * Sets this BigInteger to the value (this + addend).
+	 * @param addend the value to add
+	 */
+	public BigInteger add_assign(BigInteger addend) {
+		// this is zero, set this to the addend
+		if(sign == 0) {
+			assign(addend);
+		// the addend is zero, just return this
+		} else if(addend.sign == 0) {
+			return this;
+		// both numbers have equal sign, so their magnitudes add up
+		} else if(sign == addend.sign) {
+			mag.add_assign(addend.mag);
+		} else {
+			var cmp = mag.compare_to(addend.mag);
+			try {
+				if(cmp == 0) {
+					reset_to_zero();
+				} else if(cmp > 0) {
+					mag.subtract_assign(addend.mag);
+				} else {
+					// TODO try to avoid copy
+					var cpy = create_copy();
+					assign(addend);
+					mag.subtract_assign(cpy.mag);
+				}
+			} catch(MathError e) {
+				// ignore, cannot happen because in every subtraction the
+				// minuend is greater then the subtrahend
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Returns a BigInteger with the value (this + addend).
+	 * @param addend the value to add
+	 */
+	public BigInteger add(BigInteger addend) {
+		var result = create_copy();
+		return result.add_assign(addend);
+	}
+
+
+	/**
 	 * Compares this and val for equality.
 	 * @param val the value to which this is to be compared
 	 * @return true if this is equal to val, otherwise false
