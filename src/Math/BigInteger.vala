@@ -177,6 +177,59 @@ public class BigInteger {
 		return result.add_assign(addend);
 	}
 
+	/**
+	 * Sets this BigInteger to the value (this - subtrahend).
+	 * @param subtrahend the value to subtract
+	 */
+	public BigInteger subtract_assign(BigInteger subtrahend) {
+		// this is zero, so set this to -subtrahend
+		if(sign == 0) {
+			mag = new BigUnsigned.copy(subtrahend.mag);
+			sign = -subtrahend.sign;
+		// nothing to subtract, just return this
+		} else if(subtrahend.sign == 0) {
+			return this;
+		// both numbers have different signs, so this will keep its sign and
+		// both magnitudes just add up
+		} else if(sign != subtrahend.sign) {
+			mag.add_assign(subtrahend.mag);
+		// both numbers have equal signs
+		} else {
+			// compare both magnitudes
+			var cmp = mag.compare_to(subtrahend.mag);
+			try {
+				// both magnitudes are equal, set this to zero
+				if(cmp == 0) {
+					reset_to_zero();
+				// this magnitude is greater, subtract the subtrahend's magnitude
+				// from this
+				} else if(cmp > 0) {
+					mag.subtract_assign(subtrahend.mag);
+				// the subtrahend's magnitude is greater, take the opposite sign of
+				// the subtrahend and subtract this from the subtrahend
+				} else {
+					var cpy = create_copy();
+					assign(subtrahend);
+					mag.subtract_assign(cpy.mag);
+					sign = -sign;
+				}
+			} catch(MathError e) {
+				// ignore, cannot happen because in every subtraction the
+				// minuend is greater then the subtrahend
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Returns a BigInteger with the value (this - subtrahend).
+	 * @param subtrahend the value to subtract
+	 */
+	public BigInteger subtract(BigInteger subtrahend) {
+		var result = create_copy();
+		return result.subtract_assign(subtrahend);
+	}
+
 
 	/**
 	 * Compares this and val for equality.
