@@ -113,6 +113,26 @@ public class BigInteger {
 		return sign;
 	}
 
+
+	/**
+	 * Returns the string representation of this BigInteger in the given radix.
+	 * @param radix the radix, in [2:36]
+	 */
+	public string to_radix_string(uint radix) {
+		var vstr = mag.to_radix_string(radix);
+		if(is_negative()) {
+			return "-" + vstr;
+		} else {
+			return vstr;
+		}
+	}
+
+	/**
+	 * Returns the decimal string representation of this BigInteger.
+	 */
+	public string to_string() {
+		return to_radix_string(10);
+	}
 }
 
 }
