@@ -366,6 +366,30 @@ public class BigInteger {
 		return q;
 	}
 
+	/**
+	 * Sets the value of this to (this mod divisor). If the divisor is zero, a
+	 * MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigInteger mod_assign(BigInteger divisor) throws MathError {
+		var q = new BigInteger();
+		divide_with_remainder(divisor, q);
+		return this;
+	}
+
+	/**
+	 * Returns a BigInteger with the value (this mod divisor). If the divisor
+	 * is zero, a MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigInteger mod(BigInteger divisor) throws MathError {
+		var q = new BigInteger();
+		var r = create_copy();
+		r.divide_with_remainder(divisor, q);
+		return r;
+	}
+
+	/**
 	 * Divides this through divisor. The resulting quotient will be stored in
 	 * quotient. The remainder will be stored in this. If the divisor is zero, a
 	 * MathError.DIVISION_BY_ZERO will be thrown.
