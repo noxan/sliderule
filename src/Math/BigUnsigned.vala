@@ -211,6 +211,36 @@ public class BigUnsigned {
 	}
 
 	/**
+	 * Sets this BigUnsigned to the value (this + 1).
+	 */
+	public BigUnsigned increment_assign() {
+		int i;
+		bool carry = true;
+		for(i = 0; i < length && carry; i++) {
+			blocks[i]++;
+			carry = (blocks[i] == 0);
+		}
+
+		if(carry) {
+			if(length == blocks.length) {
+				blocks += 1;
+			} else {
+				blocks[i] = 1;
+			}
+			length++;
+		}
+
+		return this;
+	}
+
+	/**
+	 * Returns a BigUnsigned with the value (this + 1).
+	 */
+	public BigUnsigned increment() {
+		var result = create_copy();
+		return result.increment_assign();
+	}
+
 	 * Sets this BigUnsigned to the value (this + addend).
 	 * @param addend the value to add
 	 */
