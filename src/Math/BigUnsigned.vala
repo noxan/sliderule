@@ -242,7 +242,8 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets this BigUnsigned to the value (this - 1).
+	 * Sets this BigUnsigned to the value (this - 1). If the result is negative
+	 * a MathError.NEGATIVE_RESULT will be thrown.
 	 */
 	public BigUnsigned decrement_assign() {
 		if(is_zero()) {
@@ -266,7 +267,8 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Returns a BigUnsigned with the value (this - 1).
+	 * Returns a BigUnsigned with the value (this - 1). If the result is
+	 * negative a MathError.NEGATIVE_RESULT will be thrown.
 	 */
 	public BigUnsigned decrement() {
 		var result = create_copy();
