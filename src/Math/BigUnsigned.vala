@@ -241,6 +241,39 @@ public class BigUnsigned {
 		return result.increment_assign();
 	}
 
+	/**
+	 * Sets this BigUnsigned to the value (this - 1).
+	 */
+	public BigUnsigned decrement_assign() {
+		if(is_zero()) {
+			// TODO improve error message, probably unsigned decrement?
+			throw new MathError.NEGATIVE_RESULT(
+					"negative result within unsigned subtraction");
+		}
+
+		int i;
+		var borrow = true;
+		for(i = 0; borrow; i++) {
+			borrow = (blocks[i] == 0);
+			blocks[i]--;
+		}
+
+		if(blocks[length - 1] == 0) {
+			length--;
+		}
+
+		return this;
+	}
+
+	/**
+	 * Returns a BigUnsigned with the value (this - 1).
+	 */
+	public BigUnsigned decrement() {
+		var result = create_copy();
+		return result.decrement_assign();
+	}
+
+	/**
 	 * Sets this BigUnsigned to the value (this + addend).
 	 * @param addend the value to add
 	 */
