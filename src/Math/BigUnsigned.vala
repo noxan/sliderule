@@ -177,11 +177,8 @@ public class BigUnsigned {
 	 * @param val the value's string representation
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigUnsigned assign_from_radix_string(string val, uint radix) {
-		// TODO proper error handling for illegal value string
-		if(radix < 2 || radix > 36) {
-			radix = 10;
-		}
+	public BigUnsigned assign_from_radix_string(string val, uint radix)
+		requires(radix >= 2 && radix <= 36) {
 
 		reset_to_zero();
 		BigUnsigned b = new BigUnsigned.from_uint32(radix);
@@ -245,11 +242,10 @@ public class BigUnsigned {
 	 * Sets this BigUnsigned to the value (this - 1). If the result is negative
 	 * a MathError.NEGATIVE_RESULT will be thrown.
 	 */
-	public BigUnsigned decrement_assign() {
+	public BigUnsigned decrement_assign() throws MathError {
 		if(is_zero()) {
-			// TODO improve error message, probably unsigned decrement?
 			throw new MathError.NEGATIVE_RESULT(
-					"negative result within unsigned subtraction");
+					"negative result within unsigned decrement");
 		}
 
 		int i;
@@ -270,7 +266,7 @@ public class BigUnsigned {
 	 * Returns a BigUnsigned with the value (this - 1). If the result is
 	 * negative a MathError.NEGATIVE_RESULT will be thrown.
 	 */
-	public BigUnsigned decrement() {
+	public BigUnsigned decrement() throws MathError {
 		var result = create_copy();
 		return result.decrement_assign();
 	}
@@ -658,13 +654,9 @@ public class BigUnsigned {
 	 * Returns the string representation of this BigUnsigned in the given radix.
 	 * @param radix the radix, in [2:36]
 	 */
-	public string to_radix_string(uint radix) {
+	public string to_radix_string(uint radix)
+		requires(radix >= 2 && radix <= 36) {
 		// TODO IMPROVE PERFORMANCE, EXCHANGE ALGORITHM
-		if(radix < 2 || radix > 36) {
-			// TODO add documentation or throw error
-			radix = 10;
-		}
-
 		if(is_zero()) {
 			return "0";
 		}

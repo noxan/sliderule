@@ -157,7 +157,8 @@ public class BigInteger {
 	 * @param val the value's string representation
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigInteger assign_from_radix_string(string val, uint radix) {
+	public BigInteger assign_from_radix_string(string val, uint radix)
+		requires(radix >= 2 && radix <= 36) {
 		// TODO proper error handling for illegal value string
 		var sign_char = val.get(0);
 		if(sign_char == '-') {
@@ -486,7 +487,8 @@ public class BigInteger {
 	 * Returns the string representation of this BigInteger in the given radix.
 	 * @param radix the radix, in [2:36]
 	 */
-	public string to_radix_string(uint radix) {
+	public string to_radix_string(uint radix)
+		requires(radix >= 2 && radix <= 36) {
 		var vstr = mag.to_radix_string(radix);
 		if(is_negative()) {
 			return "-" + vstr;
