@@ -343,6 +343,53 @@ public class BigInteger {
 	}
 
 	/**
+	 * Divides this through divisor. The resulting quotient will be stored in
+	 * quotient. The remainder will be stored in this. If the divisor is zero, a
+	 * MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 * @param quotient the BigInteger to store the quotient result in
+	 */
+	public BigInteger divide_with_remainder(BigInteger divisor,
+			BigInteger quotient) throws MathError {
+		// divison by zero is not allowed
+		if(divisor.is_zero()) {
+			throw new MathError.DIVISION_BY_ZERO("division by zero");
+		}
+
+		if(is_zero()) {
+			quotient.reset_to_zero();
+			return this;
+		}
+
+		if(sign == divisor.sign) {
+			quotient.sign = 1;
+		} else {
+			quotient.sign = -1;
+			mag.decrement_assign();
+		}
+
+		mag.divide_with_remainder(divisor.mag, quotient.mag);
+
+		if(sign != divisor.sign) {
+			quotient.mag.increment_assign();
+
+			mag = divisor.mag.subtract(mag);
+			mag.decrement_assign();
+		}
+
+		sign = divisor.sign;
+
+		if(mag.is_zero()) {
+			sign = 0;
+		}
+		if(quotient.mag.is_zero()) {
+			quotient.sign = 0;
+		}
+
+		return this;
+	}
+
+	/**
 	 * Sets the value of this to -this;
 	 */
 	public BigInteger negate_assign() {
