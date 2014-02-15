@@ -179,6 +179,29 @@ public class BigInteger {
 	}
 
 	/**
+	 * Sets this BigInteger to the value (this + 1).
+	 */
+	public BigInteger increment_assign() {
+		if(sign == -1) {
+			mag.decrement_assign();
+			if(mag.is_zero()) {
+				sign = 0;
+			}
+		} else {
+			mag.increment_assign();
+			sign = 1;
+		}
+		return this;
+	}
+
+	/**
+	 * Returns a BigInteger with the value (this + 1).
+	 */
+	public BigInteger increment() {
+		var result = create_copy();
+		return result.increment_assign();
+	}
+
 	 * Sets this BigInteger to the value (this + addend).
 	 * @param addend the value to add
 	 */
