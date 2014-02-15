@@ -184,7 +184,11 @@ public class BigInteger {
 	 */
 	public BigInteger increment_assign() {
 		if(sign == -1) {
-			mag.decrement_assign();
+			try {
+				mag.decrement_assign();
+			} catch(MathError e) {
+				// ignore, cannot happen, because mag is not zero
+			}
 			if(mag.is_zero()) {
 				sign = 0;
 			}
@@ -208,7 +212,11 @@ public class BigInteger {
 	 */
 	public BigInteger decrement_assign() {
 		if(sign == 1) {
-			mag.decrement_assign();
+			try {
+				mag.decrement_assign();
+			} catch(MathError e) {
+				// ignore, cannot happen, because mag is not zero
+			}
 			if(mag.is_zero()) {
 				sign = 0;
 			}
