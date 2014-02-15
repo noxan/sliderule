@@ -343,6 +343,29 @@ public class BigInteger {
 	}
 
 	/**
+	 * Sets the value of this to (this / divisor). If the divisor is zero, a
+	 * MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigInteger divide_assign(BigInteger divisor) throws MathError {
+		var q = new BigInteger();
+		divide_with_remainder(divisor, q);
+		assign(q);
+		return this;
+	}
+
+	/**
+	 * Returns a BigInteger with the value (this / divisor). If the divisor is
+	 * zero, a MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigInteger divide(BigInteger divisor) throws MathError {
+		var q = new BigInteger();
+		var r = create_copy();
+		r.divide_with_remainder(divisor, q);
+		return q;
+	}
+
 	 * Divides this through divisor. The resulting quotient will be stored in
 	 * quotient. The remainder will be stored in this. If the divisor is zero, a
 	 * MathError.DIVISION_BY_ZERO will be thrown.
