@@ -74,6 +74,36 @@ public class BigRational {
 		return new BigRational.copy(this);
 	}
 
+
+	/**
+	 * Returns whether this BigRational is negative.
+	 */
+	public bool is_negative() {
+		return num.is_negative();
+	}
+
+	/**
+	 * Returns whether this BigRational is zero.
+	 */
+	public bool is_zero() {
+		return num.is_zero();
+	}
+
+	/**
+	 * Returns whether this BigRational is positive.
+	 */
+	public bool is_positive() {
+		return num.is_positive();
+	}
+
+	/**
+	 * Returns the sign of this BigRational.
+	 * @return -1, 0 or 1 if this is negative, zero or positive
+	 */
+	public int signum() {
+		return num.signum();
+	}
+
 }
 
 }
