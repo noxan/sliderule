@@ -208,7 +208,7 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets this BigUnsigned to the value (this + 1).
+	 * Sets this to the value (this + 1).
 	 */
 	public BigUnsigned increment_assign() {
 		int i;
@@ -239,7 +239,7 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets this BigUnsigned to the value (this - 1). If the result is negative
+	 * Sets this to the value (this - 1). If the result is negative
 	 * a MathError.NEGATIVE_RESULT will be thrown.
 	 */
 	public BigUnsigned decrement_assign() throws MathError {
@@ -272,7 +272,7 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets this BigUnsigned to the value (this + addend).
+	 * Sets this to the value (this + addend).
 	 * @param addend the value to add
 	 */
 	public BigUnsigned add_assign(BigUnsigned addend) {

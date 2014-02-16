@@ -180,7 +180,7 @@ public class BigInteger {
 	}
 
 	/**
-	 * Sets this BigInteger to the value (this + 1).
+	 * Sets this to the value (this + 1).
 	 */
 	public BigInteger increment_assign() {
 		if(sign == -1) {
@@ -208,7 +208,7 @@ public class BigInteger {
 	}
 
 	/**
-	 * Sets this BigInteger to the value (this - 1).
+	 * Sets this to the value (this - 1).
 	 */
 	public BigInteger decrement_assign() {
 		if(sign == 1) {
@@ -236,7 +236,7 @@ public class BigInteger {
 	}
 
 	/**
-	 * Sets this BigInteger to the value (this + addend).
+	 * Sets this to the value (this + addend).
 	 * @param addend the value to add
 	 */
 	public BigInteger add_assign(BigInteger addend) {
@@ -280,7 +280,7 @@ public class BigInteger {
 	}
 
 	/**
-	 * Sets this BigInteger to the value (this - subtrahend).
+	 * Sets this to the value (this - subtrahend).
 	 * @param subtrahend the value to subtract
 	 */
 	public BigInteger subtract_assign(BigInteger subtrahend) {
