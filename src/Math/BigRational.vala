@@ -114,6 +114,14 @@ public class BigRational {
 		return num.equals(val.num) && den.equals(val.den);
 	}
 
+	public string to_radix_string(uint radix)
+		requires(radix >= 2 && radix <= 36) {
+		return num.to_radix_string(radix) + "/" + den.to_radix_string(radix);
+	}
+
+	public string to_string() {
+		return to_radix_string(10);
+	}
 }
 
 }
