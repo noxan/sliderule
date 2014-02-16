@@ -104,6 +104,16 @@ public class BigRational {
 		return num.signum();
 	}
 
+
+	/**
+	 * Compares this and val for equality.
+	 * @param val the value to which this is to be compared
+	 * @return true if this is equal to val, otherwise false
+	 */
+	public bool equals(BigRational val) {
+		return num.equals(val.num) && den.equals(val.den);
+	}
+
 }
 
 }
