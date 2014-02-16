@@ -617,6 +617,32 @@ public class BigUnsigned {
 	}
 
 	/**
+	 * Calculates the greatest common divisor (gcd) of this and val.
+	 * @param val value with which the gcd is to be computed
+	 */
+	public BigUnsigned gcd(BigUnsigned val)
+		requires(!is_zero() && !val.is_zero()) {
+		var a = create_copy();
+		var b = val.create_copy();
+		var c = new BigUnsigned();
+
+		while(true) {
+			try {
+				if(b.is_zero()) {
+					return a;
+				}
+				a.divide_with_remainder(b, c);
+				if(a.is_zero()) {
+					return b;
+				}
+				b.divide_with_remainder(a, c);
+			} catch(MathError err) {
+				// ignore, cannot happen
+			}
+		}
+	}
+
+	/**
 	 * Compares this and val for equality.
 	 * @param val the value to which this is to be compared
 	 * @return true if this is equal to val, otherwise false

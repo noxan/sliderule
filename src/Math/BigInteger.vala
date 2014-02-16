@@ -462,6 +462,16 @@ public class BigInteger {
 	}
 
 	/**
+	 * Calculates the greatest common divisor (gcd) of this and val.
+	 * @param val value with which the gcd is to be computed
+	 */
+	public BigInteger gcd(BigInteger val)
+		requires(!is_zero() && !val.is_zero()) {
+		var gcd = mag.gcd(val.mag);
+		return new BigInteger.from_big_unsigned(1, gcd);
+	}
+
+	/**
 	 * Compares this and val for equality.
 	 * @param val the value to which this is to be compared
 	 * @return true if this is equal to val, otherwise false
