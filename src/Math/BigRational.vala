@@ -57,6 +57,14 @@ public class BigRational {
 		den = new BigInteger.from_int32(1);
 	}
 
+	public BigRational.from_fraction(BigInteger num, BigInteger den)
+		requires(!den.is_zero()) {
+		// TODO copy?
+		this.num = num;
+		this.den = den;
+		normalize();
+	}
+
 
 	/**
 	 * Creates a copy of the given BigRational.
