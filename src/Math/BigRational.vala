@@ -57,6 +57,11 @@ public class BigRational {
 		den = new BigInteger.from_int32(1);
 	}
 
+	/**
+	 * Creates a new BigRational with the given numerator and denominator.
+	 * @param num the numerator
+	 * @param den the denominator
+	 */
 	public BigRational.from_fraction(BigInteger num, BigInteger den)
 		requires(!den.is_zero()) {
 		// TODO copy?
@@ -65,11 +70,22 @@ public class BigRational {
 		normalize();
 	}
 
+	/**
+	 * Creates a new BigRational, which value will be the value of the given
+	 * string representation in the specified radix.
+	 * @param val the value's decimal string representation (in fraction format)
+	 * @param radix the radix, in [2:36]
+	 */
 	public BigRational.from_radix_string(string val, uint radix) {
 		this();
 		assign_from_radix_string(val, radix);
 	}
 
+	/**
+	 * Creates a new BigRational, which value will be the value of the given
+	 * decimal string representation.
+	 * @param val the value's decimal string representation (in fraction format)
+	 */
 	public BigRational.from_string(string val) {
 		this.from_radix_string(val, 10);
 	}
@@ -155,6 +171,12 @@ public class BigRational {
 		return this;
 	}
 
+	/**
+	 * Assigns the value of the given string representation in the specified
+	 * radix to this.
+	 * @param val the value's string representation (in fraction format)
+	 * @param radix the radix, in [2:36]
+	 */
 	public BigRational assign_from_radix_string(string val, uint radix)
 		requires(radix >= 2 && radix <= 36) {
 		if(val.contains("/")) {
@@ -169,6 +191,10 @@ public class BigRational {
 		return this;
 	}
 
+	/**
+	 * Assigns the value of the given decimal string representation to this.
+	 * @param val the value's decimal string representation (in fraction format)
+	 */
 	public BigRational assign_from_string(string val) {
 		return assign_from_radix_string(val, 10);
 	}
@@ -319,11 +345,20 @@ public class BigRational {
 		return num.equals(val.num) && den.equals(val.den);
 	}
 
+	/**
+	 * Returns the string representation of this BigRational in the given radix
+	 * in fraction format.
+	 * @param radix the radix, in [2:36]
+	 */
 	public string to_radix_string(uint radix)
 		requires(radix >= 2 && radix <= 36) {
 		return num.to_radix_string(radix) + "/" + den.to_radix_string(radix);
 	}
 
+	/**
+	 * Returns the decimal string representation of this BigRational in fraction
+	 * format.
+	 */
 	public string to_string() {
 		return to_radix_string(10);
 	}
