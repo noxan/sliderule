@@ -65,6 +65,14 @@ public class BigRational {
 		normalize();
 	}
 
+	public BigRational.from_radix_string(string val, uint radix) {
+		this();
+		assign_from_radix_string(val, radix);
+	}
+
+	public BigRational.from_string(string val) {
+		this.from_radix_string(val, 10);
+	}
 
 	/**
 	 * Creates a copy of the given BigRational.
