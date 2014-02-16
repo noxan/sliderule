@@ -129,6 +129,33 @@ public class BigRational {
 		return num.signum();
 	}
 
+	/**
+	 * Assigns the given value to this BigRational.
+	 * @param val the value to assign
+	 */
+	public BigRational assign(BigRational val) {
+		num = val.num.create_copy();
+		den = val.den.create_copy();
+		return this;
+	}
+
+	public BigRational assign_from_radix_string(string val, uint radix)
+		requires(radix >= 2 && radix <= 36) {
+		if(val.contains("/")) {
+			var split = val.split("/");
+			num.assign_from_radix_string(split[0], radix);
+			den.assign_from_radix_string(split[1], radix);
+			normalize();
+		} else {
+			num.assign_from_radix_string(val, radix);
+			den.assign_from_radix_string("1", 2);
+		}
+		return this;
+	}
+
+	public BigRational assign_from_string(string val) {
+		return assign_from_radix_string(val, 10);
+	}
 
 	/**
 	 * Sets this to the value (this + 1).
