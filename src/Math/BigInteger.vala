@@ -147,7 +147,7 @@ public class BigInteger {
 	 */
 	public BigInteger assign(BigInteger val) {
 		sign = val.sign;
-		this.mag = new BigUnsigned.copy(val.mag);
+		this.mag = val.mag.create_copy();
 		return this;
 	}
 
@@ -286,7 +286,7 @@ public class BigInteger {
 	public BigInteger subtract_assign(BigInteger subtrahend) {
 		// this is zero, so set this to -subtrahend
 		if(sign == 0) {
-			mag = new BigUnsigned.copy(subtrahend.mag);
+			mag = subtrahend.mag.create_copy();
 			sign = -subtrahend.sign;
 		// nothing to subtract, just return this
 		} else if(subtrahend.sign == 0) {
