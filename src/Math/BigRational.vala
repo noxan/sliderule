@@ -74,6 +74,31 @@ public class BigRational {
 		return new BigRational.copy(this);
 	}
 
+	/**
+	 * Normalizes this BigRational. This means, that the numerator and the
+	 * denominator will be divided by their greatest common divisor. If the
+	 * numerator is zero, then the denominator will be set to one. If the
+	 * denominator is negative, the numerator and the denominator will be
+	 * negated.
+	 */
+	private void normalize() {
+		if(num.is_zero()) {
+			// TODO replace assign_from_string
+			den.assign_from_string("1");
+		} else {
+			var gcd = num.gcd(den);
+			try {
+				num.divide_assign(gcd);
+				den.divide_assign(gcd);
+			} catch(MathError err) {
+				// ignore, cannot happen because gcd is not zero
+			}
+		}
+		if(den.is_negative()) {
+			den.negate_assign();
+			num.negate_assign();
+		}
+	}
 
 	/**
 	 * Returns whether this BigRational is negative.
@@ -104,6 +129,143 @@ public class BigRational {
 		return num.signum();
 	}
 
+
+	/**
+	 * Sets this to the value (this + 1).
+	 */
+	public BigRational increment_assign() {
+		num.add_assign(den);
+		normalize();
+		return this;
+	}
+
+	/**
+	 * Returns a BigRational with the value (this + 1).
+	 */
+	public BigRational increment() {
+		var result = create_copy();
+		return result.increment_assign();
+	}
+
+	/**
+	 * Sets this to the value (this - 1).
+	 */
+	public BigRational decrement_assign() {
+		num.subtract_assign(den);
+		normalize();
+		return this;
+	}
+
+	/**
+	 * Returns a BigRational with the value (this - 1).
+	 */
+	public BigRational decrement() {
+		var result = create_copy();
+		return result.decrement_assign();
+	}
+
+	/**
+	 * Sets this to the value (this + addend).
+	 * @param addend the value to add
+	 */
+	public BigRational add_assign(BigRational addend) {
+		num.multiply_assign(addend.den);
+		num.add_assign(addend.num.multiply(den));
+		den.multiply_assign(addend.den);
+		normalize();
+		return this;
+	}
+
+	/**
+	 * Returns a BigRational with the value (this + addend).
+	 * @param addend the value to add
+	 */
+	public BigRational add(BigRational addend) {
+		var result = create_copy();
+		return result.add_assign(addend);
+	}
+
+	/**
+	 * Sets this to the value (this - subtrahend).
+	 * @param subtrahend the value to subtract
+	 */
+	public BigRational subtract_assign(BigRational subtrahend) {
+		num.multiply_assign(subtrahend.den);
+		num.subtract_assign(subtrahend.num.multiply(den));
+		den.multiply_assign(subtrahend.den);
+		normalize();
+		return this;
+	}
+
+	/**
+	 * Returns a BigRational with the value (this - subtrahend).
+	 * @param subtrahend the value to subtract
+	 */
+	public BigRational subtract(BigRational subtrahend) {
+		var result = create_copy();
+		return result.subtract_assign(subtrahend);
+	}
+
+	/**
+	 * Sets the value of this to (this * factor).
+	 * @param factor the value to multiply with
+	 */
+	public BigRational multiply_assign(BigRational factor) {
+		num.multiply_assign(factor.num);
+		den.multiply_assign(factor.den);
+		normalize();
+		return this;
+	}
+
+	/**
+	 * Returns a BigRational with the value (this * subtrahend).
+	 * @param factor the factor to multiply with
+	 */
+	public BigRational multiply(BigRational factor) {
+		var result = create_copy();
+		return result.multiply_assign(factor);
+	}
+
+	/**
+	 * Sets the value of this to (this / divisor). If the divisor is zero, a
+	 * MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigRational divide_assign(BigRational divisor) throws MathError {
+		if(divisor.is_zero()) {
+			throw new MathError.DIVISION_BY_ZERO("division by zero");
+		}
+		num.multiply_assign(divisor.den);
+		den.multiply_assign(divisor.num);
+		normalize();
+		return this;
+	}
+
+	/**
+	 * Returns a BigRational with the value (this / divisor). If the divisor is
+	 * zero, a MathError.DIVISION_BY_ZERO will be thrown.
+	 * @param divisor the value this is to be divided through
+	 */
+	public BigRational divide(BigRational divisor) throws MathError {
+		var result = create_copy();
+		return result.divide_assign(divisor);
+	}
+
+	/**
+	 * Sets the value of this to -this;
+	 */
+	public BigRational negate_assign() {
+		num.negate_assign();
+		return this;
+	}
+
+	/**
+	 * Returns a BigRational with the value -this;
+	 */
+	public BigRational negate() {
+		var result = create_copy();
+		return result.negate_assign();
+	}
 
 	/**
 	 * Compares this and val for equality.
