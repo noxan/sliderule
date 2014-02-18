@@ -48,13 +48,8 @@ public class BigUnsigned {
 	 * @param val the given value
 	 */
 	public BigUnsigned.from_uint32(uint32 val) {
-		if(val == 0) {
-			blocks = {};
-			length = 0;
-		} else {
-			blocks = {val};
-			length = 1;
-		}
+		length = val == 0 ? 0 : 1;
+		blocks = {val};
 	}
 
 	/**
@@ -152,6 +147,43 @@ public class BigUnsigned {
 	}
 
 	/**
+	 * Assigns the given value to this.
+	 * @param the value to assign
+	 */
+	public BigUnsigned assign_uint32(uint32 val) {
+		length = val == 0 ? 0 : 1;
+		blocks[0] = val;
+		return this;
+	}
+
+	/**
+	 * Assigns the given value to this.
+	 * @param the value to assign
+	 */
+	public BigUnsigned assign_uint64(uint64 val) {
+		uint32 high = (uint32)(val >> 32);
+		if(blocks.length == 1) {
+			blocks += high;
+		} else {
+			blocks[0] = (uint32)(val & 0xFFFFFFFF);
+			blocks[1] = high;
+		}
+		length = 2;
+		remove_leading_zeros();
+		return this;
+	}
+
+	/**
+	 * Assigns the given blocks to this.
+	 * @param blocks the given value blocks, index 0 is the LSB
+	 */
+	public BigUnsigned assign_from_blocks(uint32[] blocks) {
+		this.blocks = blocks;
+		remove_leading_zeros();
+		return this;
+	}
+
+	/**
 	 * Assigns the given value to this BigUnsigned.
 	 * @param val the value to assign
 	 */
@@ -160,7 +192,6 @@ public class BigUnsigned {
 		length = val.length;
 		return this;
 	}
-
 
 	/**
 	 * Assigns the value of the given string representation in the specified
