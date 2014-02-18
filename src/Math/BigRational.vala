@@ -336,7 +336,7 @@ public class BigRational {
 		result.append(q.to_string(radix));
 
 		if(digits > 0) {
-			result.append_c('.');
+			result.append_unichar('.');
 		}
 
 		while(digits > 0) {
