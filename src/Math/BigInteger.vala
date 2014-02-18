@@ -45,10 +45,28 @@ public class BigInteger {
 	 * Creates a new BigInteger with the given value.
 	 * @param val the given value
 	 */
+	public BigInteger.from_uint32(uint32 val) {
+		sign = sign_of_uint32(val);
+		this.mag = new BigUnsigned.from_uint32(val);
+	}
+
+	/**
+	 * Creates a new BigInteger with the given value.
+	 * @param val the given value
+	 */
 	public BigInteger.from_int32(int32 val) {
 		sign = sign_of_int32(val);
 		// TODO fix absolute value hack
 		this.mag = new BigUnsigned.from_uint64(((int64)val).abs());
+	}
+
+	/**
+	 * Creates a new BigInteger with the given value.
+	 * @param val the given value
+	 */
+	public BigInteger.from_uint64(uint64 val) {
+		sign = sign_of_uint64(val);
+		this.mag = new BigUnsigned.from_uint64(val);
 	}
 
 	/**
@@ -130,6 +148,46 @@ public class BigInteger {
 	internal void reset_to_zero() {
 		sign = 0;
 		mag.reset_to_zero();
+	}
+
+	/**
+	 * Assigns the given value to this.
+	 * @param the value to assign
+	 */
+	public BigInteger assign_uint32(uint32 val) {
+		sign = sign_of_uint32(val);
+		mag.assign_uint32(val);
+		return this;
+	}
+
+	/**
+	 * Assigns the given value to this.
+	 * @param the value to assign
+	 */
+	public BigInteger assign_int32(int32 val) {
+		sign = sign_of_int32(val);
+		mag.assign_uint64(((int64)val).abs());
+		return this;
+	}
+
+	/**
+	 * Assigns the given value to this.
+	 * @param the value to assign
+	 */
+	public BigInteger assign_uint64(uint64 val) {
+		sign = sign_of_uint64(val);
+		mag.assign_uint64(val);
+		return this;
+	}
+
+	/**
+	 * Assigns the given value to this.
+	 * @param the value to assign
+	 */
+	public BigInteger assign_int64(int64 val) {
+		sign = sign_of_int64(val);
+		mag.assign_uint64(val.abs());
+		return this;
 	}
 
 	/**

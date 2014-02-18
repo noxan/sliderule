@@ -22,8 +22,16 @@ internal int sign_of_int32(int32 val) {
 	return val > 0 ? 1 : (val == 0 ? 0 : -1);
 }
 
+internal int sign_of_uint32(uint32 val) {
+	return val == 0 ? 0 : 1;
+}
+
 internal int sign_of_int64(int64 val) {
 	return val > 0 ? 1 : (val == 0 ? 0 : -1);
+}
+
+internal int sign_of_uint64(uint64 val) {
+	return val == 0 ? 0 : 1;
 }
 
 /**
