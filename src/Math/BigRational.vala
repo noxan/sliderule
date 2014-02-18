@@ -333,6 +333,28 @@ public class BigRational {
 	 * in decimal fraction format.
 	 * TODO proper for decimal fraction format
 	 */
+	public string to_comma_string(int radix=10, int digits=10) {
+		var b = new BigInteger.from_int32(radix);
+		var n = num.abs();
+		var q = new BigInteger();
+
+		var result = new StringBuilder(is_negative() ? "-" : "");
+
+		n.divide_with_remainder(den, q);
+		result.append(q.to_string(radix));
+
+		if(digits > 0) {
+			result.append_c('.');
+		}
+
+		while(digits > 0) {
+			n.multiply_assign(b);
+			n.divide_with_remainder(den, q);
+			result.append(q.to_string(radix));
+			digits--;
+		}
+
+		return result.str;
 	}
 
 	/**
