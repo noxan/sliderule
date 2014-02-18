@@ -444,6 +444,14 @@ public class BigInteger {
 		return result.negate_assign();
 	}
 
+	public BigInteger abs() {
+		if(is_negative()) {
+			return negate();
+		} else {
+			return create_copy();
+		}
+	}
+
 	/**
 	 * Calculates the greatest common divisor (gcd) of this and val.
 	 * @param val value with which the gcd is to be computed
