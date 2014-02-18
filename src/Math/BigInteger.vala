@@ -69,22 +69,13 @@ public class BigInteger {
 
 	/**
 	 * Creates a new BigInteger, which value will be the value of the given
-	 * string representation in the specified radix.
+	 * string representation in the specified radix. The default radix is 10.
 	 * @param val the value's string representation
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigInteger.from_radix_string(string val, uint radix) {
+	public BigInteger.from_string(string val, uint radix=10) {
 		this();
-		assign_from_radix_string(val, radix);
-	}
-
-	/**
-	 * Creates a new BigInteger, which value will be the value of the given
-	 * decimal string representation.
-	 * @param val the value's decimal string representation
-	 */
-	public BigInteger.from_string(string val) {
-		this.from_radix_string(val, 10);
+		assign_from_string(val, radix);
 	}
 
 	/**
@@ -153,30 +144,22 @@ public class BigInteger {
 
 	/**
 	 * Assigns the value of the given string representation in the specified
-	 * radix to this.
+	 * radix to this. The default radix is 10.
 	 * @param val the value's string representation
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigInteger assign_from_radix_string(string val, uint radix)
+	public BigInteger assign_from_string(string val, uint radix=10)
 		requires(radix >= 2 && radix <= 36) {
 		// TODO proper error handling for illegal value string
 		var sign_char = val.get(0);
 		if(sign_char == '-') {
-			mag.assign_from_radix_string(val.substring(1), radix);
+			mag.assign_from_string(val.substring(1), radix);
 			sign = -1;
 		} else {
-			mag.assign_from_radix_string(val, radix);
+			mag.assign_from_string(val, radix);
 			sign = mag.is_zero() ? 0 : 1;
 		}
 		return this;
-	}
-
-	/**
-	 * Assigns the value of the given decimal string representation to this.
-	 * @param val the value's decimal string representation
-	 */
-	public BigInteger assign_from_string(string val) {
-		return assign_from_radix_string(val, 10);
 	}
 
 	/**
@@ -503,23 +486,17 @@ public class BigInteger {
 
 	/**
 	 * Returns the string representation of this BigInteger in the given radix.
+	 * The default radix is 10.
 	 * @param radix the radix, in [2:36]
 	 */
-	public string to_radix_string(uint radix)
+	public string to_string(uint radix=10)
 		requires(radix >= 2 && radix <= 36) {
-		var vstr = mag.to_radix_string(radix);
+		var vstr = mag.to_string(radix);
 		if(is_negative()) {
 			return "-" + vstr;
 		} else {
 			return vstr;
 		}
-	}
-
-	/**
-	 * Returns the decimal string representation of this BigInteger.
-	 */
-	public string to_string() {
-		return to_radix_string(10);
 	}
 }
 

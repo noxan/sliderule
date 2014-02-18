@@ -78,22 +78,13 @@ public class BigUnsigned {
 
 	/**
 	 * Creates a new BigUnsigned, which value will be the value of the given
-	 * string representation in the specified radix.
+	 * string representation in the specified radix. The default radix is 10.
 	 * @param val the value's string representation
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigUnsigned.from_radix_string(string val, uint radix) {
+	public BigUnsigned.from_string(string val, uint radix=10) {
 		this();
-		assign_from_radix_string(val, radix);
-	}
-
-	/**
-	 * Creates a new BigUnsigned, which value will be the value of the given
-	 * decimal string representation.
-	 * @param val the value's decimal string representation
-	 */
-	public BigUnsigned.from_string(string val) {
-		this.from_radix_string(val, 10);
+		assign_from_string(val, radix);
 	}
 
 	/**
@@ -173,11 +164,11 @@ public class BigUnsigned {
 
 	/**
 	 * Assigns the value of the given string representation in the specified
-	 * radix to this.
+	 * radix to this. The default radix is 10.
 	 * @param val the value's string representation
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigUnsigned assign_from_radix_string(string val, uint radix)
+	public BigUnsigned assign_from_string(string val, uint radix=10)
 		requires(radix >= 2 && radix <= 36) {
 
 		reset_to_zero();
@@ -197,14 +188,6 @@ public class BigUnsigned {
 		}
 
 		return this;
-	}
-
-	/**
-	 * Assigns the value of the given decimal string representation to this.
-	 * @param val the value's decimal string representation
-	 */
-	public BigUnsigned assign_from_string(string val) {
-		return assign_from_radix_string(val, 10);
 	}
 
 	/**
@@ -678,9 +661,10 @@ public class BigUnsigned {
 
 	/**
 	 * Returns the string representation of this BigUnsigned in the given radix.
+	 * The default radix is 10.
 	 * @param radix the radix, in [2:36]
 	 */
-	public string to_radix_string(uint radix)
+	public string to_string(uint radix=10)
 		requires(radix >= 2 && radix <= 36) {
 		// TODO IMPROVE PERFORMANCE, EXCHANGE ALGORITHM
 		if(is_zero()) {
@@ -713,13 +697,6 @@ public class BigUnsigned {
 		}
 
 		return result.str;
-	}
-
-	/**
-	 * Returns the decimal string representation of this BigUnsigned.
-	 */
-	public string to_string() {
-		return to_radix_string(10);
 	}
 }
 

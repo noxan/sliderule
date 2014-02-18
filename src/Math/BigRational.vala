@@ -72,22 +72,13 @@ public class BigRational {
 
 	/**
 	 * Creates a new BigRational, which value will be the value of the given
-	 * string representation in the specified radix.
+	 * string representation in the specified radix. The default radix is 10.
 	 * @param val the value's decimal string representation (in fraction format)
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigRational.from_radix_string(string val, uint radix) {
+	public BigRational.from_string(string val, uint radix=10) {
 		this();
-		assign_from_radix_string(val, radix);
-	}
-
-	/**
-	 * Creates a new BigRational, which value will be the value of the given
-	 * decimal string representation.
-	 * @param val the value's decimal string representation (in fraction format)
-	 */
-	public BigRational.from_string(string val) {
-		this.from_radix_string(val, 10);
+		assign_from_string(val, radix);
 	}
 
 	/**
@@ -173,30 +164,22 @@ public class BigRational {
 
 	/**
 	 * Assigns the value of the given string representation in the specified
-	 * radix to this.
+	 * radix to this. The default radix is 10.
 	 * @param val the value's string representation (in fraction format)
 	 * @param radix the radix, in [2:36]
 	 */
-	public BigRational assign_from_radix_string(string val, uint radix)
+	public BigRational assign_from_string(string val, uint radix=10)
 		requires(radix >= 2 && radix <= 36) {
 		if(val.contains("/")) {
 			var split = val.split("/");
-			num.assign_from_radix_string(split[0], radix);
-			den.assign_from_radix_string(split[1], radix);
+			num.assign_from_string(split[0], radix);
+			den.assign_from_string(split[1], radix);
 			normalize();
 		} else {
-			num.assign_from_radix_string(val, radix);
-			den.assign_from_radix_string("1", 2);
+			num.assign_from_string(val, radix);
+			den.assign_from_string("1", 2);
 		}
 		return this;
-	}
-
-	/**
-	 * Assigns the value of the given decimal string representation to this.
-	 * @param val the value's decimal string representation (in fraction format)
-	 */
-	public BigRational assign_from_string(string val) {
-		return assign_from_radix_string(val, 10);
 	}
 
 	/**
@@ -347,20 +330,19 @@ public class BigRational {
 
 	/**
 	 * Returns the string representation of this BigRational in the given radix
-	 * in fraction format.
-	 * @param radix the radix, in [2:36]
+	 * in decimal fraction format.
+	 * TODO proper for decimal fraction format
 	 */
-	public string to_radix_string(uint radix)
-		requires(radix >= 2 && radix <= 36) {
-		return num.to_radix_string(radix) + "/" + den.to_radix_string(radix);
 	}
 
 	/**
-	 * Returns the decimal string representation of this BigRational in fraction
-	 * format.
+	 * Returns the string representation of this BigRational in the given radix
+	 * in fraction format. The default radix is 10.
+	 * @param radix the radix, in [2:36]
 	 */
-	public string to_string() {
-		return to_radix_string(10);
+	public string to_string(uint radix=10)
+		requires(radix >= 2 && radix <= 36) {
+		return num.to_string(radix) + "/" + den.to_string(radix);
 	}
 }
 
