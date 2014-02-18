@@ -110,12 +110,8 @@ public class BigRational {
 			den.assign_from_string("1");
 		} else {
 			var gcd = num.gcd(den);
-			try {
-				num.divide_assign(gcd);
-				den.divide_assign(gcd);
-			} catch(MathError err) {
-				// ignore, cannot happen because gcd is not zero
-			}
+			num.divide_assign(gcd);
+			den.divide_assign(gcd);
 		}
 		if(den.is_negative()) {
 			den.negate_assign();
@@ -279,14 +275,11 @@ public class BigRational {
 	}
 
 	/**
-	 * Sets the value of this to (this / divisor). If the divisor is zero, a
-	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Sets the value of this to (this / divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigRational divide_assign(BigRational divisor) throws MathError {
-		if(divisor.is_zero()) {
-			throw new MathError.DIVISION_BY_ZERO("division by zero");
-		}
+	public BigRational divide_assign(BigRational divisor)
+		requires(!divisor.is_zero()) {
 		num.multiply_assign(divisor.den);
 		den.multiply_assign(divisor.num);
 		normalize();
@@ -294,11 +287,10 @@ public class BigRational {
 	}
 
 	/**
-	 * Returns a BigRational with the value (this / divisor). If the divisor is
-	 * zero, a MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Returns a BigRational with the value (this / divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigRational divide(BigRational divisor) throws MathError {
+	public BigRational divide(BigRational divisor) {
 		var result = create_copy();
 		return result.divide_assign(divisor);
 	}

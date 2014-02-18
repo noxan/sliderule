@@ -167,11 +167,7 @@ public class BigInteger {
 	 */
 	public BigInteger increment_assign() {
 		if(sign == -1) {
-			try {
-				mag.decrement_assign();
-			} catch(MathError e) {
-				// ignore, cannot happen, because mag is not zero
-			}
+			mag.decrement_assign();
 			if(mag.is_zero()) {
 				sign = 0;
 			}
@@ -195,11 +191,7 @@ public class BigInteger {
 	 */
 	public BigInteger decrement_assign() {
 		if(sign == 1) {
-			try {
-				mag.decrement_assign();
-			} catch(MathError e) {
-				// ignore, cannot happen, because mag is not zero
-			}
+			mag.decrement_assign();
 			if(mag.is_zero()) {
 				sign = 0;
 			}
@@ -234,20 +226,15 @@ public class BigInteger {
 			mag.add_assign(addend.mag);
 		} else {
 			var cmp = mag.compare_to(addend.mag);
-			try {
-				if(cmp == 0) {
-					reset_to_zero();
-				} else if(cmp > 0) {
-					mag.subtract_assign(addend.mag);
-				} else {
-					// TODO try to avoid copy
-					var cpy = create_copy();
-					assign(addend);
-					mag.subtract_assign(cpy.mag);
-				}
-			} catch(MathError e) {
-				// ignore, cannot happen because in every subtraction the
-				// minuend is greater then the subtrahend
+			if(cmp == 0) {
+				reset_to_zero();
+			} else if(cmp > 0) {
+				mag.subtract_assign(addend.mag);
+			} else {
+				// TODO try to avoid copy
+				var cpy = create_copy();
+				assign(addend);
+				mag.subtract_assign(cpy.mag);
 			}
 		}
 		return this;
@@ -282,25 +269,20 @@ public class BigInteger {
 		} else {
 			// compare both magnitudes
 			var cmp = mag.compare_to(subtrahend.mag);
-			try {
-				// both magnitudes are equal, set this to zero
-				if(cmp == 0) {
-					reset_to_zero();
-				// this magnitude is greater, subtract the subtrahend's magnitude
-				// from this
-				} else if(cmp > 0) {
-					mag.subtract_assign(subtrahend.mag);
-				// the subtrahend's magnitude is greater, take the opposite sign of
-				// the subtrahend and subtract this from the subtrahend
-				} else {
-					var cpy = create_copy();
-					assign(subtrahend);
-					mag.subtract_assign(cpy.mag);
-					sign = -sign;
-				}
-			} catch(MathError e) {
-				// ignore, cannot happen because in every subtraction the
-				// minuend is greater then the subtrahend
+			// both magnitudes are equal, set this to zero
+			if(cmp == 0) {
+				reset_to_zero();
+			// this magnitude is greater, subtract the subtrahend's magnitude
+			// from this
+			} else if(cmp > 0) {
+				mag.subtract_assign(subtrahend.mag);
+			// the subtrahend's magnitude is greater, take the opposite sign of
+			// the subtrahend and subtract this from the subtrahend
+			} else {
+				var cpy = create_copy();
+				assign(subtrahend);
+				mag.subtract_assign(cpy.mag);
+				sign = -sign;
 			}
 		}
 		return this;
@@ -335,11 +317,10 @@ public class BigInteger {
 	}
 
 	/**
-	 * Sets the value of this to (this / divisor). If the divisor is zero, a
-	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Sets the value of this to (this / divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigInteger divide_assign(BigInteger divisor) throws MathError {
+	public BigInteger divide_assign(BigInteger divisor) {
 		var q = new BigInteger();
 		divide_with_remainder(divisor, q);
 		assign(q);
@@ -347,11 +328,10 @@ public class BigInteger {
 	}
 
 	/**
-	 * Returns a BigInteger with the value (this / divisor). If the divisor is
-	 * zero, a MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Returns a BigInteger with the value (this / divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigInteger divide(BigInteger divisor) throws MathError {
+	public BigInteger divide(BigInteger divisor) {
 		var q = new BigInteger();
 		var r = create_copy();
 		r.divide_with_remainder(divisor, q);
@@ -359,22 +339,20 @@ public class BigInteger {
 	}
 
 	/**
-	 * Sets the value of this to (this mod divisor). If the divisor is zero, a
-	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Sets the value of this to (this mod divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigInteger mod_assign(BigInteger divisor) throws MathError {
+	public BigInteger mod_assign(BigInteger divisor) {
 		var q = new BigInteger();
 		divide_with_remainder(divisor, q);
 		return this;
 	}
 
 	/**
-	 * Returns a BigInteger with the value (this mod divisor). If the divisor
-	 * is zero, a MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Returns a BigInteger with the value (this mod divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigInteger mod(BigInteger divisor) throws MathError {
+	public BigInteger mod(BigInteger divisor) {
 		var q = new BigInteger();
 		var r = create_copy();
 		r.divide_with_remainder(divisor, q);
@@ -383,17 +361,13 @@ public class BigInteger {
 
 	/**
 	 * Divides this through divisor. The resulting quotient will be stored in
-	 * quotient. The remainder will be stored in this. If the divisor is zero, a
-	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * quotient. The remainder will be stored in this.
+	 * @param divisor the value this is to be divided through, must not be zero
 	 * @param quotient the BigInteger to store the quotient result in
 	 */
 	public BigInteger divide_with_remainder(BigInteger divisor,
-			BigInteger quotient) throws MathError {
-		// divison by zero is not allowed
-		if(divisor.is_zero()) {
-			throw new MathError.DIVISION_BY_ZERO("division by zero");
-		}
+			BigInteger quotient)
+		requires(!divisor.is_zero()) {
 
 		if(is_zero()) {
 			quotient.reset_to_zero();

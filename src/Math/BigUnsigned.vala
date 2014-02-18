@@ -222,15 +222,10 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets this to the value (this - 1). If the result is negative
-	 * a MathError.NEGATIVE_RESULT will be thrown.
+	 * Sets this to the value (this - 1).
 	 */
-	public BigUnsigned decrement_assign() throws MathError {
-		if(is_zero()) {
-			throw new MathError.NEGATIVE_RESULT(
-					"negative result within unsigned decrement");
-		}
-
+	public BigUnsigned decrement_assign()
+		requires(!is_zero()) {
 		int i;
 		var borrow = true;
 		for(i = 0; borrow; i++) {
@@ -246,10 +241,9 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Returns a BigUnsigned with the value (this - 1). If the result is
-	 * negative a MathError.NEGATIVE_RESULT will be thrown.
+	 * Returns a BigUnsigned with the value (this - 1).
 	 */
-	public BigUnsigned decrement() throws MathError {
+	public BigUnsigned decrement() {
 		var result = create_copy();
 		return result.decrement_assign();
 	}
@@ -314,20 +308,14 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets the value of this to (this - subtrahend). If the result is negative,
-	 * a MathError.NEGATIVE_RESULT will be thrown.
+	 * Sets the value of this to (this - subtrahend).
 	 * @param subtrahend the value to subtract
 	 */
-	public BigUnsigned subtract_assign(BigUnsigned subtrahend) throws MathError {
+	public BigUnsigned subtract_assign(BigUnsigned subtrahend)
+		requires(compare_to(subtrahend) != -1) {
 		// if the subtrahend is zero
 		if(subtrahend.is_zero()) {
 			return this;
-		}
-
-		// check whether the result will not be negative
-		if(length < subtrahend.length) {
-			throw new MathError.NEGATIVE_RESULT(
-					"negative result within unsigned subtraction");
 		}
 
 		int i;
@@ -354,24 +342,16 @@ public class BigUnsigned {
 			blocks[i] -= 1;
 		}
 
-		// if there is still a borrow bit, the result would be negative, so
-		// raise an exception
-		if(borrowIn) {
-			throw new MathError.NEGATIVE_RESULT(
-					"negative result within unsigned subtraction");
-		}
-
 		remove_leading_zeros();
 
 		return this;
 	}
 
 	/**
-	 * Returns a BigUnsigned with the value (this - subtrahend). If the result
-	 * is negative, a MathError.NEGATIVE_RESULT will be thrown.
+	 * Returns a BigUnsigned with the value (this - subtrahend).
 	 * @param subtrahend the value to subtract
 	 */
-	public BigUnsigned subtract(BigUnsigned subtrahend) throws MathError {
+	public BigUnsigned subtract(BigUnsigned subtrahend) {
 		var result = create_copy();
 		return result.subtract_assign(subtrahend);
 	}
@@ -460,11 +440,10 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets the value of this to (this / divisor). If the divisor is zero, a
-	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Sets the value of this to (this / divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigUnsigned divide_assign(BigUnsigned divisor) throws MathError {
+	public BigUnsigned divide_assign(BigUnsigned divisor) {
 		var q = new BigUnsigned();
 		divide_with_remainder(divisor, q);
 		assign(q);
@@ -472,11 +451,10 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Returns a BigUnsigned with the value (this / divisor). If the divisor is
-	 * zero, a MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Returns a BigUnsigned with the value (this / divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigUnsigned divide(BigUnsigned divisor) throws MathError {
+	public BigUnsigned divide(BigUnsigned divisor) {
 		var q = new BigUnsigned();
 		var r = create_copy();
 		r.divide_with_remainder(divisor, q);
@@ -484,22 +462,20 @@ public class BigUnsigned {
 	}
 
 	/**
-	 * Sets the value of this to (this mod divisor). If the divisor is zero, a
-	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Sets the value of this to (this mod divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigUnsigned mod_assign(BigUnsigned divisor) throws MathError {
+	public BigUnsigned mod_assign(BigUnsigned divisor) {
 		var q = new BigUnsigned();
 		divide_with_remainder(divisor, q);
 		return this;
 	}
 
 	/**
-	 * Returns a BigUnsigned with the value (this mod divisor). If the divisor
-	 * is zero, a MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * Returns a BigUnsigned with the value (this mod divisor).
+	 * @param divisor the value this is to be divided through, must not be zero
 	 */
-	public BigUnsigned mod(BigUnsigned divisor) throws MathError {
+	public BigUnsigned mod(BigUnsigned divisor) {
 		var q = new BigUnsigned();
 		var r = create_copy();
 		r.divide_with_remainder(divisor, q);
@@ -508,17 +484,13 @@ public class BigUnsigned {
 
 	/**
 	 * Divides this through divisor. The resulting quotient will be stored in
-	 * quotient. The remainder will be stored in this. If the divisor is zero, a
-	 * MathError.DIVISION_BY_ZERO will be thrown.
-	 * @param divisor the value this is to be divided through
+	 * quotient. The remainder will be stored in this.
+	 * @param divisor the value this is to be divided through, must not be zero
 	 * @param quotient the BigUnsigned to store the quotient result in
 	 */
 	public BigUnsigned divide_with_remainder(BigUnsigned divisor,
-			BigUnsigned quotient) throws MathError {
-		// division by zero is not allowed
-		if(divisor.is_zero()) {
-			throw new MathError.DIVISION_BY_ZERO("division by zero");
-		}
+			BigUnsigned quotient)
+		requires(!divisor.is_zero()) {
 		// if the dividend is zero, quotient and remainder will be zero
 		// if the dividend is less than the divisor, the quotient will be zero
 		// and the remainder will have the dividend's value
@@ -610,18 +582,14 @@ public class BigUnsigned {
 		var c = new BigUnsigned();
 
 		while(true) {
-			try {
-				if(b.is_zero()) {
-					return a;
-				}
-				a.divide_with_remainder(b, c);
-				if(a.is_zero()) {
-					return b;
-				}
-				b.divide_with_remainder(a, c);
-			} catch(MathError err) {
-				// ignore, cannot happen
+			if(b.is_zero()) {
+				return a;
 			}
+			a.divide_with_remainder(b, c);
+			if(a.is_zero()) {
+				return b;
+			}
+			b.divide_with_remainder(a, c);
 		}
 	}
 
@@ -677,11 +645,7 @@ public class BigUnsigned {
 		var q = new BigUnsigned();
 		var tmp = create_copy();
 		while(!tmp.is_zero()) {
-			try {
-				tmp.divide_with_remainder(b, q);
-			} catch(MathError e) {
-				// ignore, can not happen because the divisor b is not zero
-			}
+			tmp.divide_with_remainder(b, q);
 			if(tmp.is_zero()) {
 				result.prepend_unichar('0');
 			} else {
