@@ -37,6 +37,23 @@ class Application : Granite.Application {
         window = new Gtk.Window ();
         window.set_application (this);
 
+        Gtk.Box container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+
+        Gtk.Grid grid = new Gtk.Grid ();
+
+        string[][] labelsMatrix = {{"=", ".", "0"}, {"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
+        for (int y = 0; y < labelsMatrix.length; y++) {
+            string[] labels = labelsMatrix[y];
+            for (int x = 0; x < labels.length; x++) {
+                var button = new Gtk.Button.with_label (labels[x]);
+                grid.attach (button, x, y, 1, 1);
+            }
+        }
+
+        container.add (grid);
+
+        window.add(container);
+
         window.show_all ();
     }
 }
