@@ -684,7 +684,7 @@ public class BigUnsigned {
 				if(val < 10) {
 					result.prepend_unichar((char)('0' + val));
 				} else {
-					result.prepend_unichar((char)('A' + val));
+					result.prepend_unichar((char)('A' + val - 10));
 				}
 			}
 
